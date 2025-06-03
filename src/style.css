@@ -1,3 +1,278 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@import 'tailwindcss';
+
+
+@theme {
+    --color-oxford-blue: #012340;
+    --color-ocean-blue: #0477BF;
+    --color-ncs-blue: #048ABF;
+    --color-chinese-bronze: #D98032;
+    --color-dark-bronze: #BB5F09;
+    --color-sky-cyan: #07B2D9;
+    --color-light-cyan: #E5F1FB;
+
+    --animate-pulse-slow: pulse 4s ease-in-out infinite;
+
+    --font-inter: 'Inter', sans-serif;
+    --font-roboto: 'Roboto', sans-serif;
+}
+
+@layer base {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-oxford-blue) var(--color-light-cyan);
+        scroll-behavior: smooth;
+    }
+
+    body {
+        width: 100dvw;
+        overflow-x: hidden;
+        background-color: #F0F4F8;
+        font-family: "Inter", sans-serif;
+    }
+    
+    .skill-bar {
+        height: 8px;
+        border-radius: 4px;
+        background-color: rgba(44, 116, 179, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .skill-progress {
+        height: 100%;
+        border-radius: 4px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: width 1s ease-in-out;
+    }
+    
+    .project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+/*     
+        .nav-link {
+            position: relative;
+            font-weight: 500;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #2C74B3;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after, .mobile-link.active::after {
+            width: 100%
+        } */
+    
+    /* .section {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease, transform 0.8s ease;
+    } */
+    
+    .section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .typing-effect::after {
+        content: '|';
+        animation: blink 1s infinite;
+    }
+    
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+    
+    .tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background-color: rgba(44, 116, 179, 0.1);
+        color: #2C74B3;
+    }
+/*     
+    .timeline-dot {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 9999px;
+        background-color: #CD7F32;
+        border: 3px solid white;
+        box-shadow: 0 0 0 3px rgba(205, 127, 50, 0.2);
+    }
+    
+    .timeline-line {
+        width: 2px;
+        background-color: rgba(44, 116, 179, 0.2);
+    } */
+    
+    .skill-card {
+        border-radius: 0.75rem;
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .skill-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+    }
+}
+
+@layer utilities {
+    .animate-pulse-slow {
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    .timeline-dot {
+        @apply w-4 h-4 rounded-full bg-chinese-bronze border-4 border-white shadow-[0_0_0_3px_rgba(205,127,50,0.2)];
+    }
+
+    .timeline-line {
+        @apply w-[2px] bg-[rgba(44,116,179,0.2)];
+    }
+}
+
+@layer components {
+    .skill-bar {
+        height: 8px;
+        border-radius: 4px;
+        background-color: rgba(44, 116, 179, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-progress {
+        height: 100%;
+        border-radius: 4px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transition: width 1s ease-in-out;
+    }
+
+    .project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+}
+
+@layer components {
+    .typing-effect::after {
+        content: '|';
+        animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+    }
+}
+
+.typing-effect::after {
+    content: '|';
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes pulse-pop {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.pulse-pop {
+  animation: pulse-pop 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.pop-image {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.pop-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+.pop-image:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pop-out-svg {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+
+.pop-out-svg:hover {
+  transform: scale(1.1); /* Pop out effect */
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+}
+
+.nav-link {
+    position: relative;
+    font-weight: 500;
+    padding: 0.5rem 0; /* add vertical spacing */
+    color: #1f2937; /* text-gray-800 for contrast on white */
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #048ABF; /* underline color */
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active,
+.mobile-link.active {
+    color: #048ABF; /* active or hover color */
+}
+
+.nav-link:hover::after,
+.nav-link.active::after,
+.mobile-link.active::after {
+    width: 100%;
+}
+
+

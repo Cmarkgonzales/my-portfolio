@@ -1,0 +1,63 @@
+<template>
+<!-- About Section -->
+    <section id="about" class="section py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col items-center mb-16">
+                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">About Me</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">Who I Am</h2>
+                <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-2/5">
+                    <div class="relative">
+                        <div class="w-full h-96 bg-light-cyan rounded-2xl overflow-hidden shadow-lg">
+                            <img 
+                                src="/profile.png" 
+                                alt="Profile" 
+                                class="w-full h-full object-cover rounded-2xl"
+                            />
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-chinese-bronze rounded-2xl flex items-center justify-center shadow-lg">
+                            <div class="text-center text-white">
+                                <span class="text-3xl font-bold block">3+</span>
+                                <span class="text-sm font-medium">Years Exp.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-3/5">
+                    <h3 class="text-2xl font-semibold text-ocean-blue mb-4">Full Stack Developer</h3>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        {{ aboutMe.experience }}
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        {{  aboutMe.mindset }}
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        {{ aboutMe.hobbies }}
+                    </p>
+                    
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <li
+                            v-for="(item, index) in aboutMe.personalInfo"
+                            :key="index"
+                            class="bg-light-cyan p-4 rounded-lg"
+                        >
+                            <p class="text-gray-800"><span class="font-semibold text-ocean-blue">{{ item.label }}:</span> {{ item.value }}</p>
+                        </li>
+                    </ul>
+                    
+                    <a href="#" class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md">
+                        <span>Download Resume</span>
+                        <i class="fas fa-download ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+<script setup>
+    import { aboutMe } from '@/constants/constants.js';
+</script>

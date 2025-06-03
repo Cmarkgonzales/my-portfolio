@@ -48,17 +48,15 @@
                         <div class="mt-12">
                             <h3 class="text-xl font-semibold mb-6">Follow Me</h3>
                             <div class="flex space-x-4">
-                                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors">
-                                    <i class="fab fa-github text-xl"></i>
-                                </a>
-                                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors">
-                                    <i class="fab fa-linkedin-in text-xl"></i>
-                                </a>
-                                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors">
-                                    <i class="fab fa-twitter text-xl"></i>
-                                </a>
-                                <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors">
-                                    <i class="fab fa-dribbble text-xl"></i>
+                                <a
+                                    v-for="link in socialLinks"
+                                    :key="`contact-${link.icon}`"
+                                    :href="link.url"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors"
+                                >
+                                    <i :class="`fab fa-${link.icon} text-xl`"></i>
                                 </a>
                             </div>
                         </div>
@@ -93,7 +91,7 @@
                             </div>
                             
                             <div class="pt-2">
-                                <button type="submit" class="w-full bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md flex items-center justify-center">
+                                <button type="submit" class="w-full bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md flex items-center justify-center cursor-pointer">
                                     <span>Send Message</span>
                                     <i class="fas fa-paper-plane ml-2"></i>
                                 </button>
@@ -111,3 +109,7 @@
         </div>
     </section>
 </template>
+
+<script setup>
+    import { socialLinks } from '@/constants/constants.js';
+</script>

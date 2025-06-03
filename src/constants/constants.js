@@ -7,18 +7,22 @@ const navLinks = [
     { name: 'Contact', href: '#contact' }
 ];
 
+const socialLinks = [
+    { icon: 'github', url: 'https://github.com/Cmarkgonzales' },
+    { icon: 'linkedin', url: 'https://www.linkedin.com/in/christian-mark-gonzales-8290b8347/' }
+];
+
 const aboutMe = {
     experience: `I'm a Full Stack Developer with 3+ years of experience building and maintaining scalable web applications in fast-paced, team-driven environments. Skilled in both frontend and backend development, API integration, performance tuning, bug fixing, and writing test cases to ensure code reliability.`,
     mindset: `I focus on clean, maintainable code and user-centered solutions that deliver real business value. Collaborative, adaptable, and driven to build products that perform and scale.`,
     hobbies: `In my free time, I enjoy building personal tech projects, playing online games, staying active through sports, and hiking to unwind and recharge.`,
     personalInfo: [
         { label: 'Name', value: 'Christian Mark Gonzales' },
-        { label: 'From', value: 'Cebu City, Cebu, Philippines' },
+        { label: 'From', value: 'Cebu City, Philippines' },
         { label: 'Education', value: 'Bachelor of Science in Computer Science' },
         { label: 'Availability', value: 'Full-time | Part-time | Freelance' }
     ]
 };
-
 
 const experiences = [
     {
@@ -45,4 +49,4 @@ const experiences = [
     }
 ]
 
-export { navLinks, aboutMe, experiences };
+export { navLinks, socialLinks, aboutMe, experiences };

@@ -1,5 +1,4 @@
 <template>
-<!-- About Section -->
     <section id="about" class="section py-24 bg-white">
         <div class="container mx-auto px-4">
             <div class="flex flex-col items-center mb-16">
@@ -48,8 +47,11 @@
                             <p class="text-gray-800"><span class="font-semibold text-ocean-blue">{{ item.label }}:</span> {{ item.value }}</p>
                         </li>
                     </ul>
-                    
-                    <a href="#" class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md">
+                    <a
+                        href="/Christian Gonzales Resume.pdf"
+                        download
+                        class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md"
+                    >
                         <span>Download Resume</span>
                         <i class="fas fa-download ml-2"></i>
                     </a>

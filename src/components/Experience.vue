@@ -13,7 +13,7 @@
 
                 <div class="timeline-container space-y-12">
                     <div v-for="(item, index) in experiences" :key="index" class="relative">
-                        <div class="flex flex-col md:flex-row items-center">
+                        <div class="flex flex-col md:flex-row md:min-h-[200px] items-stretch">
                             <!-- Left Column -->
                             <div
                                 class="md:w-1/2 mb-8 md:mb-0"
@@ -22,7 +22,8 @@
                                 <ExperienceCard v-if="index % 2 === 0" :item="item" />
                             </div>
                             <!-- Timeline Dot -->
-                            <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 timeline-dot z-10"></div>
+                            <div class="hidden md:flex absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 timeline-dot z-10"></div>
+
                             <!-- Right Column -->
                             <div
                                 class="md:w-1/2"

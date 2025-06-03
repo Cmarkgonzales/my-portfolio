@@ -8,7 +8,7 @@
                     </span>
                     <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                         Hi, I'm
-                        <span class="text-chinese-bronze typing-effect" id="name">
+                        <span class="text-chinese-bronze after:absolute after:ml-1 after:text-chinese-bronze after:content-['|'] after:animate-typing-effect" id="name">
                             Christian Mark Gonzales
                         </span>
                     </h1>
@@ -54,27 +54,5 @@
     </section>
 </template>
 <script setup>
-    import { ref, onMounted } from 'vue'
     import { socialLinks } from '../constants/constants'
-
-    const nameRef = ref(null)
-
-    onMounted(() => {
-        const nameElement = nameRef.value
-        if (!nameElement) return
-
-        const nameText = nameElement.textContent
-        nameElement.textContent = ''
-
-        let i = 0
-        const typeWriter = () => {
-            if (i < nameText.length) {
-                nameElement.textContent += nameText.charAt(i)
-                i++
-                setTimeout(typeWriter, 100)
-            }
-        }
-
-        setTimeout(typeWriter, 1000)
-    })
 </script>

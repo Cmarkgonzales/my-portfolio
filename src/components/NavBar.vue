@@ -3,15 +3,21 @@
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
                 <img src="/cc_logo.svg" alt="Logo" class="h-10 w-10 md:h-12 md:w-12 rounded-full">
-                <a href="#home" class="font-inter text-xl font-bold text-ocean-blue hover:text-sky-cyan transition-colors duration-300">
+                <a href="#home" class="font-inter text-xl font-bold text-ocean-blue hover:text-ncs-blue transition-colors duration-300">
                     Chris<span class="text-chinese-bronze hover:text-dark-bronze">Chan</span>
                 </a>
             </div>
-            <ul class="hidden md:flex space-x-8 font-bold">
+            <ul
+                :class="[
+                    'font-bold space-y-4 md:space-y-0 md:space-x-8 md:flex',
+                    mobileMenuVisible ? 'flex flex-col absolute top-full left-0 w-full bg-white px-4 py-4 border-t border-gray-100 md:static md:p-0 md:bg-transparent items-center text-center' : 'hidden md:flex',
+                    'space-y-4 md:space-y-0 md:items-start md:text-left'
+                ]"
+            >
                 <li
-                    class="nav-item"
                     v-for="item in navLinks"
                     :key="item.name"
+                    class="nav-item"
                     @click="handleSectionNavigation(item.href)"
                 >
                     <a
@@ -29,22 +35,6 @@
             >
                 <i :class="[mobileMenuVisible ? 'fas fa-xmark' : 'fas fa-bars', 'text-4xl']"></i>
             </button>
-        </div>
-        <div
-            id="mobile-menu"
-            class="md:hidden bg-white border-t border-gray-100"
-            :class="{ 'hidden': !mobileMenuVisible }"
-        >
-            <ul class="container mx-auto px-4 py-3 flex flex-col space-y-4">
-                <li
-                    class="mobile-nav-item"
-                    v-for="item in navLinks"
-                    :key="item.name"
-                    @click="handleSectionNavigation(item.href)"
-                >
-                    <a :href="item.href" :class="['mobile-link py-2', { active: activeLink === item.href }]">{{ item.name }}</a>
-                </li>
-            </ul>
         </div>
     </nav>
 </template>

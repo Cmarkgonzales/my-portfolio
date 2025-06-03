@@ -28,7 +28,7 @@ const experiences = [
     {
         title: 'Full Stack Developer',
         company: 'BPOSeats.com',
-        duration: 'Aug 2022 – Present',
+        duration: '2022 – Present',
         responsibilities: [
             'Maintain and enhance platform using Vue.js, Node.js, and PostgreSQL.',
             'Launch new features through cross-functional team collaboration.',
@@ -39,7 +39,7 @@ const experiences = [
     {
         title: 'Junior Frontend Developer',
         company: 'BPOSeats.com',
-        duration: 'June 2021 – July 2022',
+        duration: '2021 – 2022',
         responsibilities: [
             'Promoted from intern to junior role for strong technical growth.',
             'Built and refined UI features with Vue.js and Vuex.',
@@ -49,4 +49,123 @@ const experiences = [
     }
 ]
 
-export { navLinks, socialLinks, aboutMe, experiences };
+const mainSkills = [
+    {
+        category: 'Frontend Development',
+        icon: 'desktop',
+        color: 'sky-cyan',
+        skills: [
+            {
+                name: 'JavaScript',
+                level: 'Expert',
+                bar: 95
+            },
+            {
+                name: 'Vue.js',
+                level: 'Expert',
+                bar: 95
+            },
+            {
+                name: 'React.js',
+                level: 'Intermediate',
+                bar: 75
+            },
+            {
+                name: 'Tailwind CSS',
+                level: 'Intermediate',
+                bar: 80
+            },
+        ]
+    },
+    {
+        category: 'Backend Development',
+        icon: 'server',
+        color: 'ncs-blue',
+        skills: [
+            {
+                name: 'Node.js',
+                level: 'Advanced',
+                bar: 90
+            },
+            {
+                name: 'Python',
+                level: 'Advanced',
+                bar: 90
+            },
+            {
+                name: 'PostgreSQL',
+                level: 'Intermediate',
+                bar: 75
+            },
+            {
+                name: 'Django',
+                level: 'Advanced',
+                bar: 85
+            },
+        ]
+    },
+    {
+        category: 'DevOps & Tools',
+        icon: 'gear',
+        color: 'ocean-blue',
+        skills: [
+            {
+                name: 'Git & GitHub',
+                level: 'Expert',
+                bar: 95
+            },
+            {
+                name: 'AWS',
+                level: 'Intermediate',
+                bar: 75
+            },
+            {
+                name: 'Postman',
+                level: 'Intermediate',
+                bar: 80
+            },
+            {
+                name: 'CI/CD Pipelines',
+                level: 'Intermediate',
+                bar: 75
+            },
+        ]
+    }
+]
+
+const additionalSkills = [
+    {
+        name: 'Responsive Design',
+        color: 'ocean-blue',
+    },
+    {
+        name: 'Search Engine Optimization (SEO)',
+        color: 'ncs-blue',
+    },
+    {
+        name: 'Unit Testing',
+        color: 'sky-cyan',
+    },
+    {
+        name: 'RESTful APIs',
+        color: 'light-cyan',
+    },
+    {
+        name: 'API Optimization',
+        color: 'chinese-bronze',
+    },
+    {
+        name: 'Cross-Functional Collaboration',
+        color: 'ocean-blue',
+    },
+    {
+        name: 'Adaptive Learning',
+        color: 'ncs-blue',
+    },
+    {
+        name: 'Problem Solving',
+        color: 'sky-cyan'
+    }
+]
+
+export { navLinks, socialLinks, aboutMe, experiences, mainSkills, additionalSkills };

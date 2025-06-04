@@ -2,8 +2,12 @@
     <section id="skills" class="section py-24 bg-white">
         <div class="container mx-auto px-4">
             <div class="flex flex-col items-center mb-16">
-                <span class="text-sm font-medium text-sky-cyan uppercase tracking-wider mb-2">My Expertise</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">Technical Skills</h2>
+                <span class="text-sm font-medium text-sky-cyan uppercase tracking-wider mb-2">
+                    My Expertise
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">
+                    Technical Skills
+                </h2>
                 <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
             </div>
             
@@ -22,7 +26,7 @@
                     <div class="space-y-5">
                         <div
                             v-for="(item, idx) in skill.skills"
-                            :key="`skill-item-${index}-${idx}`"
+                            :key="`skill-item-${skill.color}-${idx}`"
                         >
                             <div class="flex justify-between mb-2">
                                 <span class="font-medium text-gray-700">
@@ -34,8 +38,9 @@
                             </div>
                             <div class="skill-bar">
                                 <div
-                                    :class="`skill-progress bg-${skill.color}`"
-                                    :style="{ width: item.bar + '%'}"></div>
+                                    class="skill-progress"
+                                    :style="{ width: `${item.bar}%`, backgroundColor: `var(--color-${skill.color})` }"
+                                ></div>
                             </div>
                         </div>
                     </div>

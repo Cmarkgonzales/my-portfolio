@@ -57,13 +57,13 @@ const mainSkills = [
         skills: [
             {
                 name: 'JavaScript',
-                level: 'Expert',
-                bar: 95
+                level: 'Advanced',
+                bar: 90
             },
             {
                 name: 'Vue.js',
-                level: 'Expert',
-                bar: 95
+                level: 'Advanced',
+                bar: 90
             },
             {
                 name: 'React.js',
@@ -116,8 +116,8 @@ const mainSkills = [
             },
             {
                 name: 'AWS',
-                level: 'Intermediate',
-                bar: 75
+                level: 'Basic',
+                bar: 65
             },
             {
                 name: 'Postman',
@@ -126,8 +126,8 @@ const mainSkills = [
             },
             {
                 name: 'CI/CD Pipelines',
-                level: 'Intermediate',
-                bar: 75
+                level: 'Basic',
+                bar: 65
             },
         ]
     }
@@ -168,4 +168,37 @@ const additionalSkills = [
     }
 ]
 
-export { navLinks, socialLinks, aboutMe, experiences, mainSkills, additionalSkills };
+const contactDetails = {
+    infos: [
+        {
+            key: 'Email',
+            value: 'cmarkgonzales.17@gmail.com',
+            icon: 'envelope',
+        },
+        {
+            key: 'Phone',
+            value: '+63 9081122600',
+            icon: 'phone'
+        },
+        {
+            key: 'Location',
+            value: 'Cebu City, Philippines',
+            icon: 'map-marker-alt',
+        }
+    ],
+    emailCredentials: {
+        serviceID: 'service_3q9u0ed',
+        templateID: 'template_wud8dqf',
+        userID: 'LWhREJ7Dl5XTeqp_6'
+    }
+}
+
+export {
+    navLinks,
+    socialLinks,
+    aboutMe,
+    experiences,
+    mainSkills,
+    additionalSkills,
+    contactDetails
+};

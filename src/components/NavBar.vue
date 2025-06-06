@@ -16,7 +16,7 @@
             >
                 <li
                     v-for="item in navLinks"
-                    :key="item.name"
+                    :key="`nav-link-${item.name}`"
                     class="nav-item"
                     @click="handleSectionNavigation(item.href)"
                 >

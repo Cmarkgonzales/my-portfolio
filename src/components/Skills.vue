@@ -15,7 +15,7 @@
                 <div
                     v-for="(skill, index) in mainSkills"
                     :key="`skill-${index}`"
-                    class="skill-card p-8"
+                    class="card p-8"
                 >
                     <div class="flex items-center justify-center w-16 h-16 bg-light-cyan rounded-2xl mx-auto">
                         <i :class="`fas fa-${skill.icon} text-ncs-blue text-2xl`"></i>

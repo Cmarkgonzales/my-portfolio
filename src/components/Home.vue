@@ -1,5 +1,5 @@
 <template>
-    <section id="home" class="section pt-28 md:pt-32 pb-16 bg-linear-to-r/decreasing from-oxford-blue to-ocean-blue text-white min-h-screen flex items-center">
+    <section id="home" ref="home" class="section pt-28 md:pt-32 pb-16 bg-linear-to-r/decreasing from-oxford-blue to-ocean-blue text-white min-h-screen flex items-center">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-10 md:mb-0">
@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 flex justify-center">
-                    <div class="relative w-64 h-64 md:w-80 md:h-80">
+                        <div class="avatar-container">
                         <div class="absolute inset-0 bg-ncs-blue rounded-full opacity-20 animate-pulse shadow-md z-0"></div>
                         <div class="absolute inset-4 bg-ocean-blue rounded-full opacity-40 shadow-md z-10"></div>
                         <div class="absolute inset-8 bg-oxford-blue rounded-full shadow-md overflow-hidden z-10 flex items-center justify-center">

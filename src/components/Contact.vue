@@ -136,10 +136,10 @@
                             <button
                                 type="submit"
                                 class="w-full bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md flex items-center justify-center cursor-pointer"
-                                :disabled="isLoading"
+                                :disabled="isSending"
                             >
                                 <template v-if="!isSending">
-                                    <span v-if="!isLoading">Send Message</span>
+                                    <span v-if="!isSending">Send Message</span>
                                     <i class="fas fa-paper-plane ml-2"></i>
                                 </template>
                                 <span v-else>

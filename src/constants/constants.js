@@ -27,13 +27,13 @@ const aboutMe = {
 const experiences = [
     {
         title: 'Full Stack Developer',
-        company: 'BPOSeats.com',
+        company: 'HQZen.com',
         duration: '2022 – Present',
         responsibilities: [
-            'Maintain and enhance platform using Vue.js, Node.js, and PostgreSQL.',
-            'Launch new features through cross-functional team collaboration.',
-            'Boost SEO performance with optimized metadata and structured data.',
-            'Improve API and query efficiency for faster load times.',
+            'Developed scalable features using Vue.js and Django, improving performance and reducing page load times by 30%.',
+            'Optimized RESTful APIs and database queries in PostgreSQL to enhance backend efficiency.',
+            'Implemented structured metadata and schema.org to boost SEO rankings.',
+            'Collaborated cross-functionally in an Agile team to deliver timely feature roll-outs.',
         ]
     },
     {
@@ -41,10 +41,9 @@ const experiences = [
         company: 'BPOSeats.com',
         duration: '2021 – 2022',
         responsibilities: [
-            'Promoted from intern to junior role for strong technical growth.',
-            'Built and refined UI features with Vue.js and Vuex.',
-            'Resolved bugs and ensured UI consistency across the platform.',
-            'Wrote unit tests and participated in code reviews.',
+            'Built reusable UI components using Vue.js and Vuex, improving front-end maintainability.',
+            'Fixed critical UI bugs, resulting in a 25% reduction in customer support tickets.',
+            'Participated in unit test writing and code reviews to uphold code quality standards.',
         ]
     }
 ]
@@ -83,24 +82,24 @@ const mainSkills = [
         color: 'ncs-blue',
         skills: [
             {
-                name: 'Node.js',
-                level: 'Advanced',
-                bar: 90
-            },
-            {
                 name: 'Python',
                 level: 'Advanced',
                 bar: 90
             },
             {
-                name: 'PostgreSQL',
+                name: 'Django',
+                level: 'Advanced',
+                bar: 85
+            },
+            {
+                name: 'Java',
                 level: 'Intermediate',
                 bar: 75
             },
             {
-                name: 'Django',
-                level: 'Advanced',
-                bar: 85
+                name: 'PostgreSQL',
+                level: 'Intermediate',
+                bar: 80
             },
         ]
     },
@@ -120,9 +119,9 @@ const mainSkills = [
                 bar: 65
             },
             {
-                name: 'Postman',
-                level: 'Intermediate',
-                bar: 80
+                name: 'Docker',
+                level: 'Basic',
+                bar: 65
             },
             {
                 name: 'CI/CD Pipelines',
@@ -168,6 +167,18 @@ const additionalSkills = [
     }
 ]
 
+const myProjects = [
+    {
+        name: 'TaskFlow',
+        type: 'Web App',
+        description: 'A task management app that helps users organize and prioritize their work efficiently.',
+        technologies: ['React', 'Tailwind CSS', 'Java', 'Spring Boot', 'PostgreSQL'],
+        demoLink: 'https://task-flow-phi-pied.vercel.app/',
+        githubLink: 'https://github.com/Cmarkgonzales/task-flow',
+        image: '/taskflow_demo.png'
+    }
+]
+
 const contactDetails = {
     infos: [
         {
@@ -200,5 +211,6 @@ export {
     experiences,
     mainSkills,
     additionalSkills,
+    myProjects,
     contactDetails
 };

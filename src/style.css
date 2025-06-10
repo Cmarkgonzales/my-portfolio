@@ -11,25 +11,19 @@
     --color-sky-cyan: #07B2D9;
     --color-light-cyan: #E5F1FB;
 
-    --animate-pulse-slow: pulse 4s ease-in-out infinite;
-
     --animate-typing-effect: blink 1s step-start infinite;
+    --animate-fade-in: fadeIn 0.6s ease-in-out forwards;
 
     @keyframes blink {
         0%, 100% { opacity: 1; }
         50% { opacity: 0; }
     }
-}
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
 }
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 
 @layer base {
     * {
@@ -43,16 +37,6 @@
         overflow-x: hidden;
         background-color: #F0F4F8;
         font-family: "Inter", sans-serif;
-    }
-    
-    .project-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    .project-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     }
     
     .section.visible {
@@ -70,20 +54,24 @@
         color: #2C74B3;
     }
     
-    .skill-card {
+    .card {
         border-radius: 0.75rem;
         background-color: white;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
-    .skill-card:hover {
+    .card:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
     }
 }
 
 @layer utilities {
+    .avatar-container {
+        @apply relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 xl:w-[28rem] xl:h-[28rem];
+    }
+
     .timeline-dot {
         @apply w-4 h-4 rounded-full bg-chinese-bronze border-4 border-white shadow-[0_0_0_3px_rgba(205,127,50,0.2)];
     }
@@ -94,22 +82,6 @@
 }
 
 @layer components {
-    .nav-link {
-        position: relative;
-        font-weight: 500;
-        padding: 0.5rem 0;
-        color: #1f2937;
-        text-decoration: none;
-        border-bottom: 2px solid transparent;
-        transition: color 0.3s ease, border-color 0.3s ease;
-    }
-
-    .nav-link:hover,
-    .nav-link.active {
-        color: var(--color-ncs-blue);
-        border-bottom: 2px solid var(--color-ncs-blue);
-    }
-
     .skill-bar {
         height: 8px;
         border-radius: 4px;
@@ -125,15 +97,5 @@
         left: 0;
         top: 0;
         transition: width 1s ease-in-out;
-    }
-
-    .project-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .project-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     }
 }

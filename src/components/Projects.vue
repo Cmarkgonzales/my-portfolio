@@ -8,38 +8,74 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="project-card bg-white rounded-xl overflow-hidden shadow-sm" data-category="web">
-                    <div class="h-48 bg-gradient-to-br from-ocean-blue to-process-cyan relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center text-white">
-                            <svg class="w-20 h-20 opacity-30" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/>
-                                <path d="M13 7h-2v6h6v-2h-4z"/>
-                            </svg>
-                        </div>
+                <div
+                    v-for="project in myProjects"
+                    :key="project.name"
+                    class="card bg-white rounded-xl overflow-hidden"
+                    data-category="web"
+                >
+                    <div class="relative h-48">
+                        <img
+                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-300"
+                            :src="project.image"
+                            :alt="project.name"
+                        />
                     </div>
                     <div class="p-6">
                         <div class="flex justify-between items-center mb-3">
-                            <h3 class="text-xl font-bold text-oxford-blue">E-Commerce Platform</h3>
-                            <span class="tag">Web App</span>
+                            <h3 class="text-lg font-semibold text-oxford-blue">{{ project.name }}</h3>
+                            <span class="text-xs bg-blue-100 text-ncs-blue font-medium px-2 py-0.5 rounded-full capitalize">
+                                {{ project.type }}
+                            </span>
                         </div>
-                        <p class="text-gray-600 mb-4 line-clamp-3">A full-featured e-commerce platform with product management, cart functionality, and payment processing.</p>
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
+                            {{ project.description }}
+                        </p>
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">React</span>
-                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Node.js</span>
-                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">MongoDB</span>
-                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Stripe</span>
+                            <span
+                                v-for="tech in project.technologies"
+                                :key="`tech-${project.name}-${tech}`"
+                                class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                            >
+                                {{ tech }}
+                            </span>
                         </div>
                         <div class="flex space-x-4">
-                            <a href="#" class="text-process-cyan hover:text-ocean-blue transition-colors font-medium flex items-center">
-                                <i class="fas fa-external-link-alt mr-1"></i> Demo
+                            <a
+                                :href="project.demoLink"
+                                class="text-ncs-blue hover:text-oxford-blue transition-colors font-medium flex items-center"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <i class="fas fa-external-link-alt mr-1"></i>
+                                Demo
                             </a>
-                            <a href="#" class="text-process-cyan hover:text-ocean-blue transition-colors font-medium flex items-center">
-                                <i class="fab fa-github mr-1"></i> Code
+                            <a
+                                :href="project.githubLink"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-ncs-blue hover:text-oxford-blue transition-colors font-medium flex items-center"
+                            >
+                                <i class="fab fa-github mr-1"></i>
+                                Code
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
+            <div
+                v-if="myProjects.length <= 1"
+                class="mt-12 mx-auto max-w-md text-center transition-opacity duration-700 animate-fade-in"
+            >
+                <p class="text-gray-600 italic flex items-center justify-center gap-2">
+                    <i class="fas fa-clock text-ncs-blue"></i>
+                    More projects to come soon. Stay tuned!
+                </p>
+            </div>
         </div>
     </section>
 </template>
+
+<script setup>
+    import { myProjects } from '../constants/constants'
+</script>

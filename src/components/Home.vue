@@ -8,7 +8,9 @@
                     </span>
                     <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                         Hi, I'm
-                        <span class="text-chinese-bronze after:absolute after:ml-1 after:text-chinese-bronze after:content-['|'] after:animate-typing-effect" id="name">
+                        <span
+                            class="text-chinese-bronze after:absolute after:ml-1 after:text-chinese-bronze after:content-['|'] after:animate-typing-effect" id="name"
+                        >
                             Christian Mark Gonzales
                         </span>
                     </h1>
@@ -16,8 +18,12 @@
                         I build exceptional digital experiences that make an impact through clean code and thoughtful design.
                     </p>
                     <div class="flex flex-wrap gap-4 sm:flex-row">
-                        <a href="#contact" class="bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition duration-300 transform hover:scale-105 shadow-lg w-full sm:w-max flex justify-center">Get in Touch</a>
-                        <a href="#projects" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition duration-300 border border-white/20 sm:flex-row w-full sm:w-max flex justify-center">View Projects</a>
+                        <a href="#contact" class="bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition duration-300 transform hover:scale-105 shadow-lg w-full sm:w-max flex justify-center">
+                            Get in Touch
+                        </a>
+                        <a href="#projects" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition duration-300 border border-white/20 sm:flex-row w-full sm:w-max flex justify-center">
+                            View Projects
+                        </a>
                     </div>
                 </div>
                 <div class="md:w-1/2 flex justify-center">

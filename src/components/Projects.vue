@@ -2,8 +2,12 @@
     <section id="projects" ref="projects" class="section py-24 bg-light-cyan">
         <div class="container mx-auto px-4">
             <div class="flex flex-col items-center mb-16">
-                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">My Work</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">Featured Projects</h2>
+                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">
+                    My Work
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">
+                    Featured Projects
+                </h2>
                 <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
             </div>
 

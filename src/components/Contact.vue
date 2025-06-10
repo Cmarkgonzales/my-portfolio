@@ -43,7 +43,9 @@
                         </div>
                         
                         <div class="mt-12">
-                            <h3 class="text-xl font-semibold mb-6">Follow Me</h3>
+                            <h3 class="text-xl font-semibold mb-6">
+                                Follow Me
+                            </h3>
                             <div class="flex space-x-4">
                                 <a
                                     v-for="link in socialLinks"

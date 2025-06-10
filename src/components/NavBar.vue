@@ -10,7 +10,10 @@
                 href="#home"
                 class="font-inters text-lg lg:text-3xl font-bold text-ocean-blue hover:text-ncs-blue transition-colors duration-300"
             >
-                Chris<span class="text-chinese-bronze hover:text-dark-bronze">Chan</span>
+                Chris
+                <span class="text-chinese-bronze hover:text-dark-bronze">
+                    Chan
+                </span>
             </a>
         </div>
 
@@ -31,7 +34,7 @@
         >
             <ul class="flex flex-col items-center space-y-5 md:flex-row lg:space-x-5 md:space-x-1 md:space-y-0">
                 <li
-                    v-for="item in menu"
+                    v-for="item in navLinks"
                     :key="`nav-link-${item.name}`"
                     @click="handleSectionNavigation(item.href)"
                 >
@@ -56,7 +59,6 @@
     import { ref, onMounted, onBeforeUnmount, watch, nextTick} from 'vue';
     import { navLinks } from '@/constants/constants.js';
 
-    const menu = ref(navLinks);
     const activeLink = ref('#home');
     const mobileMenuVisible = ref(false);
     let observer;
@@ -93,9 +95,9 @@
         sections.value.forEach(section => observer.observe(section));
     });
 
-    // onBeforeUnmount(() => {
-    //     sections.value.forEach(section => observer.unobserve(section));
-    // });
+    onBeforeUnmount(() => {
+        sections.value.forEach(section => observer.unobserve(section));
+    });
 
     watch(activeLink, (newValue, oldValue) => {
         if (newValue && newValue !== oldValue) {

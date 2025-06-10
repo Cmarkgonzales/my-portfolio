@@ -13,9 +13,9 @@ const socialLinks = [
 ];
 
 const aboutMe = {
-    experience: `I'm a Full Stack Developer with 3+ years of experience building and maintaining scalable web applications in fast-paced, team-driven environments. Skilled in both frontend and backend development, API integration, performance tuning, bug fixing, and writing test cases to ensure code reliability.`,
+    experience: `I'm a Full Stack Developer with 3+ years of experience delivering scalable, high-performance web applications in fast-paced, collaborative environments. Proficient in both frontend and backend development, with expertise in API integration, performance optimization, debugging, and writing reliable, testable code. Currently exploring the intersection of AI and web development to build smarter, next-generation digital experiences.`,
     mindset: `I focus on clean, maintainable code and user-centered solutions that deliver real business value. Collaborative, adaptable, and driven to build products that perform and scale.`,
-    hobbies: `In my free time, I enjoy building personal tech projects, playing online games, staying active through sports, and hiking to unwind and recharge.`,
+    hobbies: `In my free time, I enjoy building personal tech projects, playing online games and staying active through sports.`,
     personalInfo: [
         { label: 'Name', value: 'Christian Mark Gonzales' },
         { label: 'From', value: 'Cebu City, Philippines' },

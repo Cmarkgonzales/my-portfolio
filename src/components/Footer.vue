@@ -13,13 +13,20 @@
                             href="#home"
                             class="font-inters text-lg lg:text-3xl font-bold text-ncs-blue hover:text-sky-cyan transition-colors duration-300"
                         >
-                            Chris<span class="text-chinese-bronze hover:text-dark-bronze">Chan</span>
+                            Chris
+                            <span class="text-chinese-bronze hover:text-dark-bronze">
+                                Chan
+                            </span>
                         </a>
                     </div>
-                    <p class="text-gray-400 mt-2 ml-2">Full Stack Developer</p>
+                    <p class="text-gray-400 mt-2 ml-2">
+                        Full Stack Developer
+                    </p>
                 </div>
                 <div class="text-center md:text-left mb-6 md:mb-0">
-                    <p class="text-gray-300">&copy; 2025 Christian Mark Gonzales. All rights reserved.</p>
+                    <p class="text-gray-300">
+                        &copy; 2025 Christian Mark Gonzales. All rights reserved.
+                    </p>
                 </div>
                 <div>
                     <a href="#home" class="bg-ocean-blue hover:bg-ncs-blue p-3 rounded-xl transition-colors inline-block shadow-lg">

@@ -2,17 +2,24 @@
     <section id="experience" ref="experience" class="section py-24 bg-light-cyan">
         <div class="container mx-auto px-4">
             <div class="flex flex-col items-center mb-16">
-                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">My Journey</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">Work Experience</h2>
+                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">
+                    My Journey
+                </span>
+                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">
+                    Work Experience
+                </h2>
                 <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
             </div>
             
             <div class="relative max-w-4xl mx-auto">
                 <!-- Timeline Line -->
                 <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full timeline-line"></div>
-
                 <div class="timeline-container space-y-12">
-                    <div v-for="(item, index) in experiences" :key="index" class="relative">
+                    <div
+                        v-for="(item, index) in experiences"
+                        :key="`exp-item-${index}`"
+                        class="relative"
+                    >
                         <div class="flex flex-col md:flex-row md:min-h-[200px] items-stretch">
                             <!-- Left Column -->
                             <div

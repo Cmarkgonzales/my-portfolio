@@ -10,10 +10,7 @@
                 href="#home"
                 class="font-inters text-lg lg:text-3xl font-bold text-ocean-blue hover:text-ncs-blue transition-colors duration-300"
             >
-                Chris
-                <span class="text-chinese-bronze hover:text-dark-bronze">
-                    Chan
-                </span>
+                Chris<span class="text-chinese-bronze hover:text-dark-bronze">Chan</span>
             </a>
         </div>
 

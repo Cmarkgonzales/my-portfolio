@@ -171,7 +171,7 @@ const myProjects = [
     {
         name: 'TaskFlow',
         type: 'Web App',
-        description: 'A task management app that helps users organize and prioritize their work efficiently.',
+        description: 'A task management web app that helps users efficiently organize, prioritize, and track tasks with customizable lists and progress monitoring.',
         technologies: ['React', 'Tailwind CSS', 'Java', 'Spring Boot', 'PostgreSQL'],
         demoLink: 'https://task-flow-phi-pied.vercel.app/',
         githubLink: 'https://github.com/Cmarkgonzales/task-flow',

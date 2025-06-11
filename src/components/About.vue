@@ -63,7 +63,7 @@
                         </li>
                     </ul>
                     <a
-                        href="/Christian Gonzales Resume.pdf"
+                        href="/my-portfolio/Christian_Gonzales_Resume.pdf"
                         download
                         class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md"
                     >

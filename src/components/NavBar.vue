@@ -1,5 +1,8 @@
 <template>
-    <header class="fixed w-full bg-white flex justify-between items-center p-4 shadow-sm z-20 ">
+    <header
+        class="fixed w-full bg-white flex justify-between items-center p-4 shadow-sm z-20"
+        data-aos="fade-down"
+    >
         <div class="flex items-center space-x-2 cursor-pointer :hover:opacity-90 transition-opacity duration-300">
             <img
                 src="/portfolio_logo.svg"

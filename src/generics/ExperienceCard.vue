@@ -1,5 +1,8 @@
 <template>
-    <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+    <div
+        class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+        :data-aos="index % 2 === 0 ? 'fade-right' : 'fade-left'"
+    >
         <span class="inline-block bg-sky-cyan/10 text-sky-cyan px-3 py-1 rounded-full text-sm font-medium mb-3">
             {{ item.duration }}
         </span>
@@ -20,10 +23,18 @@
     </div>
 </template>
 
-<script>
-    export default {
-        props: {
-            item: Object
+<script setup>
+    import { defineProps } from 'vue';
+
+    const props = defineProps({
+        item: {
+            type: Object,
+            required: true
+        },
+
+        index: {
+            type: Number,
+            required: true
         }
-    }
+    });
 </script>

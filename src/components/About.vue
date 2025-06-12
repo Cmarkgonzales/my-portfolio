@@ -1,23 +1,23 @@
 <template>
-    <section id="about" ref="about" class="section py-24 bg-white">
+    <section
+        id="about"
+        class="section py-24 bg-white"
+    >
         <div class="container mx-auto px-4">
-            <div class="flex flex-col items-center mb-16">
-                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">
-                    About Me
-                </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">
-                    Who I Am
-                </h2>
-                <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
-            </div>
-            
+            <SectionHeader
+                title="About Me"
+                subTitle="Who I Am"
+            />
             <div class="flex flex-col md:flex-row items-center gap-12">
-                <div class="md:w-2/5">
+                <div
+                    class="md:w-2/5"
+                    data-aos="fade-right"
+                >
                     <div class="relative">
                         <div class="w-full h-96 bg-light-cyan rounded-2xl overflow-hidden shadow-lg">
-                            <img 
-                                src="/profile.png" 
-                                alt="Profile" 
+                            <img
+                                src="/profile.png"
+                                alt="About Profile"
                                 class="w-full h-full object-cover rounded-2xl"
                             />
                         </div>
@@ -33,8 +33,8 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="md:w-3/5">
+
+                <div class="md:w-3/5" data-aos="fade-left" data-aos-delay="400">
                     <h3 class="text-2xl font-semibold text-ocean-blue mb-4">
                         Full Stack Developer
                     </h3>
@@ -42,30 +42,34 @@
                         {{ aboutMe.experience }}
                     </p>
                     <p class="text-gray-700 mb-6 leading-relaxed">
-                        {{  aboutMe.mindset }}
+                        {{ aboutMe.mindset }}
                     </p>
                     <p class="text-gray-700 mb-6 leading-relaxed">
                         {{ aboutMe.hobbies }}
                     </p>
-                    
-                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+                    <ul
+                        class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+                        data-aos="zoom-in"
+                        data-aos-delay="600"
+                    >
                         <li
                             v-for="(item, index) in aboutMe.personalInfo"
                             :key="index"
                             class="bg-light-cyan p-4 rounded-lg"
                         >
                             <p class="text-gray-800">
-                                <span class="font-semibold text-ocean-blue">
-                                    {{ item.label }}:
-                                </span>
+                                <span class="font-semibold text-ocean-blue">{{ item.label }}:</span>
                                 {{ item.value }}
                             </p>
                         </li>
                     </ul>
+
                     <a
                         href="/my-portfolio/Christian_Gonzales_Resume.pdf"
                         download
-                        class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md"
+                        class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md" data-aos="fade-up"
+                        data-aos-delay="600"
                     >
                         <span>Download Resume</span>
                         <i class="fas fa-download ml-2"></i>
@@ -75,6 +79,8 @@
         </div>
     </section>
 </template>
+
 <script setup>
+    import SectionHeader from '@/generics/SectionHeader.vue';
     import { aboutMe } from '@/constants/constants.js';
 </script>

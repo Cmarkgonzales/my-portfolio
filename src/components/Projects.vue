@@ -1,22 +1,20 @@
 <template>
-    <section id="projects" ref="projects" class="section py-24 bg-light-cyan">
+    <section
+        id="projects"
+        class="section py-24 bg-light-cyan"
+    >
         <div class="container mx-auto px-4">
-            <div class="flex flex-col items-center mb-16">
-                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">
-                    My Work
-                </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">
-                    Featured Projects
-                </h2>
-                <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
-            </div>
-
+            <SectionHeader
+                title="My Work"
+                subTitle="Featured Projects"
+            />
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div
                     v-for="project in myProjects"
                     :key="project.name"
                     class="card bg-white rounded-xl overflow-hidden"
                     data-category="web"
+                    data-aos="fade-up"
                 >
                     <div class="relative h-48">
                         <img
@@ -70,6 +68,7 @@
             <div
                 v-if="myProjects.length <= 1"
                 class="mt-12 mx-auto max-w-md text-center transition-opacity duration-700 animate-fade-in"
+                data-aos="fade-up"
             >
                 <p class="text-gray-600 italic flex items-center justify-center gap-2">
                     <i class="fas fa-clock text-ncs-blue"></i>
@@ -81,5 +80,6 @@
 </template>
 
 <script setup>
+    import SectionHeader from '@/generics/SectionHeader.vue'
     import { myProjects } from '../constants/constants'
 </script>

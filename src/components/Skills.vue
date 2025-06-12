@@ -1,21 +1,20 @@
 <template>
-    <section id="skills" class="section py-24 bg-white">
+    <section
+        id="skills"
+        class="section py-24 bg-white"
+    >
         <div class="container mx-auto px-4">
-            <div class="flex flex-col items-center mb-16">
-                <span class="text-sm font-medium text-sky-cyan uppercase tracking-wider mb-2">
-                    My Expertise
-                </span>
-                <h2 class="text-3xl md:text-4xl font-bold text-oxford-blue mb-4 text-center">
-                    Technical Skills
-                </h2>
-                <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
-            </div>
-            
+            <SectionHeader
+                title="My Expertise"
+                subTitle="Technical Skills"
+            />
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 <div
                     v-for="(skill, index) in mainSkills"
                     :key="`skill-${index}`"
                     class="card p-8"
+                    data-aos="zoom-in"
+                    :data-aos-delay="index * 100"
                 >
                     <div class="flex items-center justify-center w-16 h-16 bg-light-cyan rounded-2xl mx-auto">
                         <i :class="`fas fa-${skill.icon} text-ncs-blue text-2xl`"></i>
@@ -47,7 +46,10 @@
                 </div>
             </div>
             
-            <div class="mt-12">
+            <div
+                class="mt-12"
+                data-aos="fade-up"
+            >
                 <h3 class="text-xl font-bold text-oxford-blue mb-6 text-center">Additional Skills</h3>
                 <div class="flex flex-wrap justify-center gap-3">
                     <span
@@ -64,5 +66,6 @@
 </template>
 
 <script setup>
+    import SectionHeader from '@/generics/SectionHeader.vue';
     import { mainSkills, additionalSkills } from '@/constants/constants.js';
 </script>

@@ -1,22 +1,19 @@
 <template>
     <section
         id="contact"
-        ref="contact"
         class="section py-24 bg-gradient-to-br from-oxford-blue to-ocean-blue text-white"
     >
         <div class="container mx-auto px-4">
-            <div class="flex flex-col items-center mb-16">
-                <span class="text-sm font-medium text-process-cyan uppercase tracking-wider mb-2">
-                    Contact
-                </span>
-                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center">
-                    Get In Touch
-                </h2>
-                <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
-            </div>
-
+            <SectionHeader
+                title="Contact"
+                subTitle="Get In Touch"
+                subTitleColor="text-white"
+            />
             <div class="flex flex-col md:flex-row gap-12 max-w-5xl mx-auto">
-                <div class="md:w-2/5">
+                <div
+                    class="md:w-2/5"
+                    data-aos="fade-right"
+                >
                     <div class="bg-white/5 rounded-2xl p-8 backdrop-blur-sm border border-white/10 shadow-lg">
                         <h3 class="text-2xl font-semibold mb-8">
                             Contact Information
@@ -62,7 +59,10 @@
                     </div>
                 </div>
                 
-                <div class="md:w-3/5">
+                <div
+                    class="md:w-3/5"
+                    data-aos="fade-left"
+                >
                     <div class="bg-white/5 rounded-2xl p-8 backdrop-blur-sm border border-white/10 shadow-lg">
                         <h3 class="text-2xl font-semibold mb-6">
                             Send Me a Message
@@ -175,6 +175,7 @@
 </template>
 
 <script setup>
+    import SectionHeader from '@/generics/SectionHeader.vue';
     import emailjs from '@emailjs/browser';
     import { socialLinks, contactDetails } from '@/constants/constants.js';
     import { ref } from 'vue';

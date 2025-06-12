@@ -38,28 +38,6 @@
         background-color: #F0F4F8;
         font-family: "Inter", sans-serif;
     }
-
-    .tag {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        background-color: rgba(44, 116, 179, 0.1);
-        color: #2C74B3;
-    }
-    
-    .card {
-        border-radius: 0.75rem;
-        background-color: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
-    }
 }
 
 @layer utilities {
@@ -92,5 +70,26 @@
         left: 0;
         top: 0;
         transition: width 1s ease-in-out;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background-color: rgba(44, 116, 179, 0.1);
+    }
+
+    .card {
+        border-radius: 0.75rem;
+        background-color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
     }
 }

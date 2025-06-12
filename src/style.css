@@ -38,11 +38,6 @@
         background-color: #F0F4F8;
         font-family: "Inter", sans-serif;
     }
-    
-    .section.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
 
     .tag {
         display: inline-block;

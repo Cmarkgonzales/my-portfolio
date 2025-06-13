@@ -1,5 +1,8 @@
 <template>
-    <section id="home" ref="home" class="section pt-28 md:pt-32 pb-16 bg-linear-to-r/decreasing from-oxford-blue to-ocean-blue text-white min-h-screen flex items-center">
+    <section
+        id="home"
+        class="section pt-28 md:pt-32 pb-16 bg-linear-to-r/decreasing from-oxford-blue to-ocean-blue text-white min-h-screen flex items-center"
+    >
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div
@@ -35,7 +38,7 @@
                     <div
                         class="flex flex-wrap gap-4 sm:flex-row"
                         data-aos="zoom-in"
-                        data-aos-delay="800"
+                        data-aos-delay="600"
                     >
                         <a
                             href="#contact"
@@ -97,10 +100,4 @@
 
 <script setup>
     import { socialLinks } from '../constants/constants';
-    import { onMounted } from 'vue';
-    import AOS from 'aos';
-
-    onMounted(() => {
-        AOS.refresh();
-    });
 </script>

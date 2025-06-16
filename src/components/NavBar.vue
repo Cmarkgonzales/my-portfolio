@@ -81,19 +81,21 @@
     </header>
 </template>
 <script setup>
-    import { ref, onMounted, onBeforeUnmount, watch, nextTick} from 'vue';
-    import { navLinks } from '@/constants/constants.js';
+    import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick} from 'vue';
+    import { constantsStore } from '@/store';
 
     const activeLink = ref('#home');
     const mobileMenuVisible = ref(false);
-    let observer;
+    const sections = ref([]);
 
+    const navLinks = computed(() => constantsStore.navLinks);
+
+    let observer;
     const handleSectionNavigation = async (section) => {
         activeLink.value = section;
         mobileMenuVisible.value = false;
     };
 
-    const sections = ref([]);
     onMounted(async () => {
         await nextTick();
         sections.value = navLinks

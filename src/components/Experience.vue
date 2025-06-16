@@ -50,7 +50,11 @@
 </template>
 
 <script setup>
+    import { computed } from 'vue';
+    import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue';
     import ExperienceCard from '@/generics/ExperienceCard.vue';
-    import { experiences } from '@/constants/constants.js';
+
+    const experiences = computed(() => constantsStore.experiences);
+
 </script>

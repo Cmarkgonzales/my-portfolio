@@ -80,6 +80,9 @@
 </template>
 
 <script setup>
+    import { computed } from 'vue';
+    import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue'
-    import { myProjects } from '../constants/constants'
+
+    const myProjects = computed(() => constantsStore.projects);
 </script>

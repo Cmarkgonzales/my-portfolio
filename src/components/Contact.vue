@@ -175,10 +175,10 @@
 </template>
 
 <script setup>
-    import SectionHeader from '@/generics/SectionHeader.vue';
+    import { ref, computed } from 'vue';
+    import { constantsStore } from '@/store';
     import emailjs from '@emailjs/browser';
-    import { socialLinks, contactDetails } from '@/constants/constants.js';
-    import { ref } from 'vue';
+    import SectionHeader from '@/generics/SectionHeader.vue';
 
     const name = ref('')
     const email = ref('')
@@ -191,6 +191,9 @@
         title: 'Message Sent',
         content: 'Thank you! I’ll get back to you as soon as possible.',
     })
+
+    const socialLinks = computed(() => constantsStore.socialLinks);
+    const contactDetails = computed(() => constantsStore.contact);
 
     const sendEmail = async () => {
         isSending.value = true

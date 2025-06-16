@@ -81,6 +81,9 @@
 </template>
 
 <script setup>
+    import { computed } from 'vue';
+    import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue';
-    import { aboutMe } from '@/constants/constants.js';
+
+    const aboutMe = computed(() => constantsStore.aboutMe);
 </script>

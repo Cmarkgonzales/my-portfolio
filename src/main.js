@@ -13,7 +13,7 @@ app.mount('#app')
 // Initialize AOS after mount
 AOS.init({
     once: true,
-    duration: 1000,
+    duration: 800,
     easing: 'ease-out-cubic',
      offset: 100
 })

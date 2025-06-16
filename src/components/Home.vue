@@ -21,11 +21,9 @@
                         data-aos-delay="400"
                     >
                         Hi, I'm
-                        <span
-                            id="typing-name"
-                            class="text-chinese-bronze after:absolute after:ml-1 after:text-chinese-bronze after:content-['|'] after:animate-typing-effect"
-                        >
-                            Christian Mark Gonzales
+                        <span class="relative text-chinese-bronze font-mono">
+                            <span id="typed-name"></span>
+                            <span class="absolute ml-2 text-chinese-bronze animate-coding-cursor">_</span>
                         </span>
                     </h1>
                     <p
@@ -33,7 +31,7 @@
                         data-aos="fade-up"
                         data-aos-delay="600"
                     >
-                        I build exceptional digital experiences that make an impact through clean code and thoughtful design.
+                        {{ introText }}
                     </p>
                     <div
                         class="flex flex-wrap gap-4 sm:flex-row"
@@ -81,7 +79,7 @@
             <div
                 class="mt-16 flex justify-center space-x-6"
                 data-aos="fade-up"
-                data-aos-delay="1200"
+                data-aos-delay="600"
             >
                 <a
                     v-for="link in socialLinks"
@@ -99,5 +97,25 @@
 </template>
 
 <script setup>
-    import { socialLinks } from '../constants/constants';
+    import { onMounted, computed } from 'vue';
+    import { constantsStore } from '@/store';
+
+    const introText = computed(() => constantsStore.homeSection.introText);
+    const socialLinks = computed(() => constantsStore.socialLinks);
+
+    onMounted(() => {
+        const name = "Christian Mark Gonzales";
+        const typedName = document.getElementById("typed-name");
+        let index = 0;
+
+        const type = () => {
+            if (index < name.length) {
+                typedName.textContent += name.charAt(index);
+                index++;
+                setTimeout(type, 100);  // 100ms per character
+            }
+        };
+
+        type();
+    });
 </script>

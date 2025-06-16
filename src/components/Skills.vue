@@ -66,6 +66,10 @@
 </template>
 
 <script setup>
+    import { computed } from 'vue';
+    import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue';
-    import { mainSkills, additionalSkills } from '@/constants/constants.js';
+
+    const mainSkills = computed(() => constantsStore.mainSkills);
+    const additionalSkills = computed(() => constantsStore.additionalSkills);
 </script>

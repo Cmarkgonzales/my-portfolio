@@ -18,7 +18,6 @@
                         <h3 class="text-2xl font-semibold mb-8">
                             Contact Information
                         </h3>
-
                         <div class="space-y-8">
                             <div
                                 v-for="detail in contactDetails.infos"
@@ -26,7 +25,10 @@
                                 class="flex items-start"
                             >
                                 <div class="bg-chinese-bronze/20 p-3 rounded-xl mr-4 flex-shrink-0">
-                                    <font-awesome-icon class="text-chinese-bronze" :icon="['fas', detail.icon]"></font-awesome-icon>
+                                    <font-awesome-icon
+                                        class="text-chinese-bronze"
+                                        :icon="['fas', detail.icon]"
+                                    ></font-awesome-icon>
                                 </div>
                                 <div>
                                     <h4 class="text-lg font-medium mb-1">
@@ -38,11 +40,9 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mt-12">
-                            <h3 class="text-xl font-semibold mb-6">
-                                Follow Me
-                            </h3>
+                            <h3 class="text-xl font-semibold mb-6">Follow Me</h3>
                             <div class="flex space-x-4">
                                 <a
                                     v-for="link in socialLinks"
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div
                     class="md:w-3/5"
                     data-aos="fade-left"
@@ -70,100 +70,78 @@
                         <form
                             id="contact-form"
                             class="space-y-6"
-                            @submit.prevent="sendEmail"
+                            @submit.prevent="handleSubmit"
                         >
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label
-                                        for="name"
-                                        class="block text-sm font-medium mb-2"
-                                    >
-                                        Name
-                                    </label>
-                                    <input
-                                        v-model="name"
-                                        type="text"
-                                        id="name"
-                                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-chinese-bronze text-white"
-                                        placeholder="Your Name"
-                                    >
-                                </div>
-                                <div>
-                                    <label
-                                        for="email"
-                                        class="block text-sm font-medium mb-2"
-                                    >
-                                        Email
-                                    </label>
-                                    <input
-                                        v-model="email"
-                                        type="email"
-                                        id="email"
-                                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-chinese-bronze text-white"
-                                        placeholder="Your Email"
-                                    >
-                                </div>
+                                <FormInput
+                                    id="name"
+                                    label="Name"
+                                    v-model="formData.name"
+                                    :error="errors.name"
+                                    @clearError="clearError('name')"
+                                    placeholder="Your Name"
+                                />
+                                <FormInput
+                                    id="email"
+                                    label="Email"
+                                    v-model="formData.email"
+                                    :error="errors.email"
+                                    @clearError="clearError('email')"
+                                    type="email"
+                                    placeholder="Your Email"
+                                />
                             </div>
-                            <div>
-                                <label
-                                    for="subject"
-                                    class="block text-sm font-medium mb-2"
-                                >
-                                    Subject
-                                </label>
-                                <input
-                                    v-model="subject"
-                                    type="text"
-                                    id="subject"
-                                    class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-chinese-bronze text-white"
-                                    placeholder="Subject"
-                                >
-                            </div>
-                            <div>
-                                <label
-                                    for="message"
-                                    class="block text-sm font-medium mb-2"
-                                >
-                                    Message
-                                </label>
-                                <textarea
-                                    v-model="message"
-                                    id="message"
-                                    rows="5"
-                                    class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-chinese-bronze text-white"
-                                    placeholder="Your Message"
-                                >
-                                </textarea>
-                            </div>
+                            <FormInput
+                                id="subject"
+                                label="Subject"
+                                v-model="formData.subject"
+                                :error="errors.subject"
+                                @clearError="clearError('subject')"
+                                placeholder="Subject"
+                            />
+                            <FormTextArea
+                                id="message"
+                                label="Message"
+                                v-model="formData.message"
+                                :error="errors.message"
+                                @clearError="clearError('message')"
+                                placeholder="Your Message"
+                            />
+
                             <button
                                 type="submit"
                                 class="w-full bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md flex items-center justify-center cursor-pointer"
                                 :disabled="isSending"
                             >
                                 <template v-if="!isSending">
-                                    <span v-if="!isSending">Send Message</span>
+                                    Send Message
                                     <font-awesome-icon class="ml-2" icon="fas fa-paper-plane"></font-awesome-icon>
                                 </template>
-                                <span v-else>
-                                    <font-awesome-icon class="ml-2 animate-spin" icon="fas fa-spinner"></font-awesome-icon>
+                                <template v-else>
+                                    <font-awesome-icon class="mr-2 animate-spin" icon="fas fa-spinner"></font-awesome-icon>
                                     Sending...
-                                </span>
+                                </template>
                             </button>
                         </form>
+
                         <transition name="fade">
                             <div
                                 v-if="showModal"
                                 class="fixed inset-0 z-50 flex items-center justify-center bg-light-cyan/60 rounded-2xl backdrop-blur-sm"
                             >
                                 <div class="bg-light-cyan rounded-lg p-6 max-w-sm w-full text-center shadow-xl text-oxford-blue">
-                                <h2 class="text-xl font-bold mb-2">{{ modalMessage.title }}</h2>
-                                <p class="mb-4">{{ modalMessage.content }}</p>
-                                <button
-                                    @click="showModal = false"
-                                    class="mt-2 px-4 py-2 bg-chinese-bronze text-white rounded hover:bg-dark-bronze transition"
-                                >
-                                    Close
-                                </button>
+                                    <h2 class="text-xl font-bold mb-2">
+                                        {{ modalMessage.title }}
+                                    </h2>
+                                    <p class="mb-4">
+                                        {{ modalMessage.content }}
+                                    </p>
+                                    <button
+                                        class="mt-2 px-4 py-2 bg-chinese-bronze text-white rounded hover:bg-dark-bronze transition"
+                                        @click="showModal = false"
+                                    >
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         </transition>
@@ -175,43 +153,80 @@
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
-    import { constantsStore } from '@/store';
+    import { reactive, ref, computed } from 'vue';
     import emailjs from '@emailjs/browser';
+    import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue';
+    import FormInput from '@/generics/FormInput.vue';
+    import FormTextArea from '@/generics/FormTextArea.vue';
 
-    const name = ref('')
-    const email = ref('')
-    const subject = ref('')
-    const message = ref('')
-
-    const showModal = ref(false)
-    const isSending = ref(false)
-    const modalMessage = ref({
-        title: 'Message Sent',
-        content: 'Thank you! I’ll get back to you as soon as possible.',
+    const formData = reactive({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
     })
 
-    const socialLinks = computed(() => constantsStore.socialLinks);
-    const contactDetails = computed(() => constantsStore.contact);
+    const errors = reactive({})
+    const isSending = ref(false)
+    const showModal = ref(false)
+    const modalMessage = ref({
+        title: 'Message Sent',
+        content: 'Thank you! I’ll get back to you as soon as possible.'
+    })
 
-    const sendEmail = async () => {
+    const socialLinks = computed(() => constantsStore.socialLinks)
+    const contactDetails = computed(() => constantsStore.contact)
+
+    const validate = () => {
+        Object.keys(errors).forEach(key => delete errors[key])
+        let isValid = true
+
+        if (!formData.name.trim()) {
+            errors.name = 'Name is required'
+            isValid = false
+        }
+        if (!formData.email.trim()) {
+            errors.email = 'Email is required'
+            isValid = false
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            errors.email = 'Invalid email format'
+            isValid = false
+        }
+        if (!formData.subject.trim()) {
+            errors.subject = 'Subject is required'
+            isValid = false
+        }
+        if (!formData.message.trim()) {
+            errors.message = 'Message is required'
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    const clearError = (field) => {
+        delete errors[field]
+    }
+
+    const handleSubmit = async () => {
+        if (!validate()) return
+
         isSending.value = true
         try {
-            const { serviceID, templateID, userID } = contactDetails.emailCredentials
-            const templateParams = {
-                name: name.value,
-                email: email.value,
-                subject: subject.value,
-                message: message.value,
+            const { serviceID, templateID, userID } = contactDetails.value.emailCredentials
+            await emailjs.send(serviceID, templateID, { ...formData }, userID)
+
+            Object.keys(formData).forEach(key => formData[key] = '')
+            modalMessage.value = {
+                title: 'Message Sent',
+                content: 'Thank you! I’ll get back to you as soon as possible.'
             }
-
-            await emailjs.send(serviceID, templateID, templateParams, userID)
-
-            name.value = email.value = subject.value = message.value = ''
         } catch (error) {
-            modalMessage.title.value = 'Error Sending Message'
-            modalMessage.content.value = 'There was an error sending your message. Please try again later.'
+            modalMessage.value = {
+                title: 'Error Sending Message',
+                content: 'There was an error sending your message. Please try again later.'
+            }
         } finally {
             isSending.value = false
             showModal.value = true

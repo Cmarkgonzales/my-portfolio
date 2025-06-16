@@ -17,7 +17,7 @@
                     :data-aos-delay="index * 100"
                 >
                     <div class="flex items-center justify-center w-16 h-16 bg-light-cyan rounded-2xl mx-auto">
-                        <font-awesome-icon class="text-ncs-blue text-2xl" :icon="['fas', skill.icon]"></font-awesome-icon>
+                        <font-awesome-icon class="text-ncs-blue text-2xl" :icon="['fas', skill.icon]" />
                     </div>
                     <h3 class="text-xl font-bold text-oxford-blue mb-4 text-center">
                         {{ skill.category }}

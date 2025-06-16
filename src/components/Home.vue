@@ -89,7 +89,7 @@
                     rel="noopener noreferrer"
                     class="text-white text-3xl hover:text-chinese-bronze transition-colors"
                 >
-                    <font-awesome-icon :icon="['fab', link.icon]"></font-awesome-icon>
+                    <font-awesome-icon :icon="['fab', link.icon]" />
                 </a>
             </div>
         </div>

@@ -28,7 +28,7 @@
                                     <font-awesome-icon
                                         class="text-chinese-bronze"
                                         :icon="['fas', detail.icon]"
-                                    ></font-awesome-icon>
+                                    />
                                 </div>
                                 <div>
                                     <h4 class="text-lg font-medium mb-1">
@@ -52,7 +52,7 @@
                                     rel="noopener noreferrer"
                                     class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors"
                                 >
-                                    <font-awesome-icon class="text-xl" :icon="['fab', link.icon]"></font-awesome-icon>
+                                    <font-awesome-icon class="text-xl" :icon="['fab', link.icon]" />
                                 </a>
                             </div>
                         </div>
@@ -115,10 +115,10 @@
                             >
                                 <template v-if="!isSending">
                                     Send Message
-                                    <font-awesome-icon class="ml-2" icon="fas fa-paper-plane"></font-awesome-icon>
+                                    <font-awesome-icon class="ml-2" icon="fas fa-paper-plane" />
                                 </template>
                                 <template v-else>
-                                    <font-awesome-icon class="mr-2 animate-spin" icon="fas fa-spinner"></font-awesome-icon>
+                                    <font-awesome-icon class="mr-2 animate-spin" icon="fas fa-spinner" />
                                     Sending...
                                 </template>
                             </button>
@@ -165,18 +165,18 @@
         email: '',
         subject: '',
         message: ''
-    })
+    });
 
-    const errors = reactive({})
-    const isSending = ref(false)
-    const showModal = ref(false)
+    const errors = reactive({});
+    const isSending = ref(false);
+    const showModal = ref(false);
     const modalMessage = ref({
         title: 'Message Sent',
         content: 'Thank you! I’ll get back to you as soon as possible.'
-    })
+    });
 
-    const socialLinks = computed(() => constantsStore.socialLinks)
-    const contactDetails = computed(() => constantsStore.contact)
+    const socialLinks = computed(() => constantsStore.socialLinks);
+    const contactDetails = computed(() => constantsStore.contact);
 
     const validate = () => {
         Object.keys(errors).forEach(key => delete errors[key])

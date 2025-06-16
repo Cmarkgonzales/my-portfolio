@@ -72,7 +72,7 @@
                         data-aos-delay="600"
                     >
                         <span>Download Resume</span>
-                        <font-awesome-icon class="ml-2" icon="fas fa-download"></font-awesome-icon>
+                        <font-awesome-icon class="ml-2" icon="fas fa-download" />
                     </a>
                 </div>
             </div>

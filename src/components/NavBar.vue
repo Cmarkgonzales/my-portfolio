@@ -5,7 +5,9 @@
             data-aos="fade-down"
         >
             <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition-opacity duration-300">
+                <div
+                    class="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                >
                     <img
                         src="/portfolio_logo.svg"
                         alt="Nav Logo"
@@ -18,20 +20,22 @@
                         Chris<span class="text-chinese-bronze hover:text-dark-bronze">Chan</span>
                     </a>
                 </div>
+
                 <div class="md:hidden z-40">
                     <button
                         type="button"
                         class="block text-oxford-blue text-3xl focus:outline-none"
                         @click="mobileMenuVisible = true"
                     >
-                        <font-awesome-icon icon="fas fa-bars"></font-awesome-icon>
+                        <font-awesome-icon icon="fas fa-bars" />
                     </button>
                 </div>
+
                 <ul class="hidden md:flex md:items-center lg:space-x-5 md:space-x-1">
                     <li
                         v-for="item in navLinks"
                         :key="`nav-link-${item.name}`"
-                        @click="handleSectionNavigation(item.href)"
+                        @click="scrollToSection(item.href)"
                     >
                         <a
                             :href="item.href"
@@ -56,15 +60,15 @@
             <button
                 type="button"
                 class="absolute top-4 right-4 text-3xl text-oxford-blue focus:outline-none"
-                @click="mobileMenuVisible = false"
+                @click="closeMobileMenu"
             >
-                <font-awesome-icon icon="fas fa-xmark"></font-awesome-icon>
+                <font-awesome-icon icon="fas fa-xmark" />
             </button>
             <ul class="flex flex-col space-y-5">
                 <li
                     v-for="item in navLinks"
                     :key="`mobile-link-${item.name}`"
-                    @click="handleSectionNavigation(item.href)"
+                    @click="scrollToSection(item.href)"
                 >
                     <a
                         :href="item.href"
@@ -80,50 +84,69 @@
         </div>
     </header>
 </template>
+
 <script setup>
-    import { ref, computed, onMounted, onBeforeUnmount, watch, nextTick} from 'vue';
+    import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
     import { constantsStore } from '@/store';
 
+    const navLinks = computed(() => constantsStore.navLinks);
     const activeLink = ref('#home');
     const mobileMenuVisible = ref(false);
     const sections = ref([]);
+    let observer = null;
 
-    const navLinks = computed(() => constantsStore.navLinks);
-
-    let observer;
-    const handleSectionNavigation = async (section) => {
-        activeLink.value = section;
+    const scrollToSection = (selector) => {
+        const target = document.querySelector(selector);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            activeLink.value = selector;
+        }
         mobileMenuVisible.value = false;
-    };
+    }
 
-    onMounted(async () => {
-        await nextTick();
-        sections.value = navLinks
+    const closeMobileMenu = () => {
+        mobileMenuVisible.value = false;
+    }
+
+    // Escape key closes mobile menu
+    const handleKeydown = (e) => {
+        if (e.key === 'Escape') closeMobileMenu();
+    }
+
+    const initIntersectionObserver = () => {
+        if (observer) observer.disconnect();
+
+        sections.value = navLinks.value
             .map(link => document.querySelector(link.href))
             .filter(Boolean);
 
         observer = new IntersectionObserver(
-            (entries) => {
-                const visibleSections = entries
+            entries => {
+                const visible = entries
                     .filter(entry => entry.isIntersecting)
                     .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
 
-                if (visibleSections.length > 0) {
-                    const topSection = visibleSections[0];
-                    activeLink.value = `#${topSection.target.id}`;
+                if (visible.length > 0) {
+                    activeLink.value = `#${visible[0].target.id}`;
                 }
             },
-            {
-                root: null,
-                threshold: 0.3,
-            }
+            { root: null, threshold: 0.3 }
         );
 
         sections.value.forEach(section => observer.observe(section));
+    }
+
+    onMounted(() => {
+        requestAnimationFrame(() => {
+            history.replaceState(null, '', '#home');
+            initIntersectionObserver();
+            window.addEventListener('keydown', handleKeydown);
+        });
     });
 
     onBeforeUnmount(() => {
-        sections.value.forEach(section => observer.unobserve(section));
+        if (observer) observer.disconnect();
+        window.removeEventListener('keydown', handleKeydown);
     });
 
     watch(activeLink, (newValue, oldValue) => {

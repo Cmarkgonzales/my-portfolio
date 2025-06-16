@@ -89,9 +89,9 @@
                     :href="link.url"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-white hover:text-chinese-bronze transition-colors"
+                    class="text-white text-3xl hover:text-chinese-bronze transition-colors"
                 >
-                    <i :class="`fab fa-${link.icon} text-3xl`"></i>
+                    <font-awesome-icon :icon="['fab', link.icon]"></font-awesome-icon>
                 </a>
             </div>
         </div>

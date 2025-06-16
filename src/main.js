@@ -3,8 +3,12 @@ import './style.css'
 import App from './App.vue'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import FontAwesome from './plugins/fontawesome'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+
+FontAwesome(app)
+app.mount('#app')
 
 // Initialize AOS after mount
 AOS.init({

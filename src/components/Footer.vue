@@ -27,7 +27,7 @@
                 </div>
                 <div>
                     <a href="#home" class="bg-ocean-blue hover:bg-ncs-blue p-3 rounded-xl transition-colors inline-block shadow-lg">
-                        <i class="fas fa-arrow-up"></i>
+                        <font-awesome-icon icon="fas fa-arrow-up"></font-awesome-icon>
                     </a>
                 </div>
             </div>

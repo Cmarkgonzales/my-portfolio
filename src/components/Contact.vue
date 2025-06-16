@@ -26,7 +26,7 @@
                                 class="flex items-start"
                             >
                                 <div class="bg-chinese-bronze/20 p-3 rounded-xl mr-4 flex-shrink-0">
-                                    <i :class="[`fas fa-${detail.icon}`, 'text-chinese-bronze']"></i>
+                                    <font-awesome-icon class="text-chinese-bronze" :icon="['fas', detail.icon]"></font-awesome-icon>
                                 </div>
                                 <div>
                                     <h4 class="text-lg font-medium mb-1">
@@ -52,7 +52,7 @@
                                     rel="noopener noreferrer"
                                     class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors"
                                 >
-                                    <i :class="`fab fa-${link.icon} text-xl`"></i>
+                                    <font-awesome-icon class="text-xl" :icon="['fab', link.icon]"></font-awesome-icon>
                                 </a>
                             </div>
                         </div>
@@ -142,10 +142,10 @@
                             >
                                 <template v-if="!isSending">
                                     <span v-if="!isSending">Send Message</span>
-                                    <i class="fas fa-paper-plane ml-2"></i>
+                                    <font-awesome-icon class="ml-2" icon="fas fa-paper-plane"></font-awesome-icon>
                                 </template>
                                 <span v-else>
-                                    <i class="fas fa-spinner animate-spin ml-2"></i>
+                                    <font-awesome-icon class="ml-2 animate-spin" icon="fas fa-spinner"></font-awesome-icon>
                                     Sending...
                                 </span>
                             </button>

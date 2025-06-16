@@ -21,10 +21,10 @@
                 <div class="md:hidden z-40">
                     <button
                         type="button"
-                        class="block text-oxford-blue focus:outline-none"
+                        class="block text-oxford-blue text-3xl focus:outline-none"
                         @click="mobileMenuVisible = true"
                     >
-                        <i class="fas fa-bars text-3xl"></i>
+                        <font-awesome-icon icon="fas fa-bars"></font-awesome-icon>
                     </button>
                 </div>
                 <ul class="hidden md:flex md:items-center lg:space-x-5 md:space-x-1">
@@ -58,7 +58,7 @@
                 class="absolute top-4 right-4 text-3xl text-oxford-blue focus:outline-none"
                 @click="mobileMenuVisible = false"
             >
-                <i class="fas fa-xmark"></i>
+                <font-awesome-icon icon="fas fa-xmark"></font-awesome-icon>
             </button>
             <ul class="flex flex-col space-y-5">
                 <li

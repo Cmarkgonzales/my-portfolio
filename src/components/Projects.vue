@@ -49,7 +49,7 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <i class="fas fa-external-link-alt mr-1"></i>
+                                <font-awesome-icon class="text-sm mr-1" icon="fas fa-external-link-alt"></font-awesome-icon>
                                 Demo
                             </a>
                             <a
@@ -58,7 +58,7 @@
                                 rel="noopener noreferrer"
                                 class="text-ncs-blue hover:text-oxford-blue transition-colors font-medium flex items-center"
                             >
-                                <i class="fab fa-github mr-1"></i>
+                                <font-awesome-icon class="mr-1" icon="fab fa-github"></font-awesome-icon>
                                 Code
                             </a>
                         </div>
@@ -71,7 +71,7 @@
                 data-aos="fade-up"
             >
                 <p class="text-gray-600 italic flex items-center justify-center gap-2">
-                    <i class="fas fa-clock text-ncs-blue"></i>
+                    <font-awesome-icon class="text-ncs-blue" icon="fas fa-clock"></font-awesome-icon>
                     More projects to come soon. Stay tuned!
                 </p>
             </div>

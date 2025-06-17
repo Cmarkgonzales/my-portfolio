@@ -48,6 +48,7 @@
                                     v-for="link in socialLinks"
                                     :key="`contact-${link.icon}`"
                                     :href="link.url"
+                                    :aria-label="`Profile link for ${link.icon}`"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="bg-white/10 hover:bg-white/20 p-3 rounded-xl transition-colors"

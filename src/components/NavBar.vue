@@ -17,7 +17,7 @@
                         href="#home"
                         class="font-inters text-base sm:text-xl lg:text-2xl xl:text-3xl font-bold text-ocean-blue hover:text-ncs-blue transition-colors duration-300"
                     >
-                        Chris<span class="text-chinese-bronze hover:text-dark-bronze">Chan</span>
+                        Chris<span class="text-dark-bronze hover:text-chinese-bronze">Chan</span>
                     </a>
                 </div>
 

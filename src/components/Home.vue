@@ -41,7 +41,7 @@
                     >
                         <a
                             href="#contact"
-                            class="bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition-transform duration-300 transform hover:scale-105 shadow-lg text-center"
+                            class="bg-dark-bronze hover:bg-chinese-bronze text-white px-6 py-3 rounded-lg font-medium transition-transform duration-300 transform hover:scale-105 shadow-lg text-center"
                         >
                             Get in Touch
                         </a>
@@ -90,6 +90,7 @@
                     v-for="link in socialLinks"
                     :key="`home-${link.icon}`"
                     :href="link.url"
+                    :aria-label="`Profile account for ${link.icon}`"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-white text-2xl sm:text-3xl hover:text-chinese-bronze transition-colors"

@@ -2,7 +2,7 @@
     <div class="flex items-center justify-center h-screen bg-oxford-blue">
         <div class="relative w-36 h-36">
             <!-- Outer Pulse Circle -->
-            <div class="absolute inset-0 rounded-full border-4 border-chinese-bronze animate-ping opacity-30"></div>
+            <div class="absolute inset-0 rounded-full border-4 border-chinese-bronze/30 animate-ping"></div>
 
             <!-- Spinning Gradient Ring -->
             <div class="absolute inset-0 rounded-full border-t-4 border-ocean-blue border-b-4 animate-spin"></div>

@@ -1,21 +1,21 @@
 <template>
     <header>
         <nav
-            class="fixed top-0 left-0 w-full bg-white px-4 py-2 shadow-sm z-30"
+            class="fixed top-0 left-0 w-full bg-white px-4 py-3 shadow-sm z-30"
             data-aos="fade-down"
         >
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center max-w-7xl mx-auto">
                 <div
-                    class="flex items-center space-x-2 cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                    class="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition-opacity duration-300"
                 >
                     <img
                         src="/portfolio_logo.svg"
                         alt="Nav Logo"
-                        class="h-12 w-12 lg:h-14 lg:w-14 xl:h-16 xl:w-16 rounded-full transition-all duration-300"
+                        class="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 xl:h-16 xl:w-16 rounded-full transition-all duration-300"
                     />
                     <a
                         href="#home"
-                        class="font-inters text-lg lg:text-3xl font-bold text-ocean-blue hover:text-ncs-blue transition-colors duration-300"
+                        class="font-inters text-base sm:text-xl lg:text-2xl xl:text-3xl font-bold text-ocean-blue hover:text-ncs-blue transition-colors duration-300"
                     >
                         Chris<span class="text-chinese-bronze hover:text-dark-bronze">Chan</span>
                     </a>
@@ -24,14 +24,15 @@
                 <div class="md:hidden z-40">
                     <button
                         type="button"
-                        class="block text-oxford-blue text-3xl focus:outline-none"
+                        class="text-oxford-blue text-3xl focus:outline-none"
                         @click="mobileMenuVisible = true"
+                        aria-label="Open mobile menu"
                     >
                         <font-awesome-icon icon="fas fa-bars" />
                     </button>
                 </div>
 
-                <ul class="hidden md:flex md:items-center lg:space-x-5 md:space-x-1">
+                <ul class="hidden md:flex items-center space-x-2 lg:space-x-6">
                     <li
                         v-for="item in navLinks"
                         :key="`nav-link-${item.name}`"
@@ -40,8 +41,10 @@
                         <a
                             :href="item.href"
                             :class="[
-                                'relative inline-block px-4 py-2 rounded-full transition-all duration-300 ease-linear text-oxford-blue text-lg',
-                                activeLink === item.href ? 'bg-ocean-blue text-white' : 'hover:bg-ncs-blue/5 hover:text-ncs-blue'
+                                'relative inline-block px-4 py-2 rounded-full transition-all duration-300 ease-linear text-base lg:text-lg text-oxford-blue',
+                                activeLink === item.href
+                                ? 'bg-ocean-blue text-white'
+                                : 'hover:bg-ncs-blue/5 hover:text-ncs-blue'
                             ]"
                         >
                             {{ item.name }}
@@ -53,7 +56,7 @@
 
         <div
             :class="[
-                'fixed top-0 right-0 w-64 h-full bg-white z-40 p-10 flex flex-col space-y-8 shadow-lg transform transition-transform duration-300 ease-in-out md:hidden',
+                'fixed top-0 right-0 w-64 h-full bg-white z-40 p-8 flex flex-col space-y-6 shadow-lg transform transition-transform duration-300 ease-in-out md:hidden',
                 mobileMenuVisible ? 'translate-x-0' : 'translate-x-full'
             ]"
         >
@@ -61,10 +64,12 @@
                 type="button"
                 class="absolute top-4 right-4 text-3xl text-oxford-blue focus:outline-none"
                 @click="closeMobileMenu"
+                aria-label="Close mobile menu"
             >
                 <font-awesome-icon icon="fas fa-xmark" />
             </button>
-            <ul class="flex flex-col space-y-5">
+
+            <ul class="flex flex-col space-y-5 mt-6">
                 <li
                     v-for="item in navLinks"
                     :key="`mobile-link-${item.name}`"
@@ -73,8 +78,8 @@
                     <a
                         :href="item.href"
                         :class="[
-                            'relative inline-block px-4 py-2 rounded-full transition-all duration-300 ease-linear text-oxford-blue text-lg',
-                            activeLink === item.href ? 'bg-ocean-blue text-white' : ''
+                            'relative inline-block px-4 py-2 rounded-full transition-all duration-300 ease-linear text-base text-oxford-blue',
+                            activeLink === item.href ? 'bg-ocean-blue text-white' : 'hover:bg-ncs-blue/10 hover:text-ncs-blue'
                         ]"
                     >
                         {{ item.name }}

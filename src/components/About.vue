@@ -67,6 +67,7 @@
 
                     <a
                         href="/my-portfolio/Christian_Gonzales_Resume.pdf"
+                        aria-label="Download"
                         download
                         class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md" data-aos="fade-up"
                         data-aos-delay="600"

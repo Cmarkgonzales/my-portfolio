@@ -56,5 +56,4 @@
     import ExperienceCard from '@/generics/ExperienceCard.vue';
 
     const experiences = computed(() => constantsStore.experiences);
-
 </script>

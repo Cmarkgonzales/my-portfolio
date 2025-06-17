@@ -72,7 +72,7 @@
                             transform-gpu transition-transform duration-500 group-hover:rotate-2 group-hover:-translate-y-2 group-hover:scale-105"
                         >
                             <img
-                                src="/3d_profile.png"
+                                src="/assets/home_avatar.png"
                                 alt="3D Profile"
                                 class="w-full h-full object-cover rounded-full pointer-events-none"
                             />

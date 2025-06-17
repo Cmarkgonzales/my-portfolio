@@ -19,7 +19,7 @@
                     <div class="relative h-48">
                         <img
                             class="absolute inset-0 w-full h-full object-cover transition-transform duration-300"
-                            :src="`/my-portfolio/${project.image}`"
+                            :src="`/my-portfolio/assets/${project.image}`"
                             :alt="project.name"
                         />
                     </div>

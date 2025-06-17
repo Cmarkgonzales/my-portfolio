@@ -16,7 +16,7 @@
                     <div class="relative">
                         <div class="w-full h-96 bg-light-cyan rounded-2xl overflow-hidden shadow-lg">
                             <img
-                                src="/profile.png"
+                                src="/assets/profile.png"
                                 alt="About Profile"
                                 class="w-full h-full object-cover rounded-2xl"
                             />
@@ -66,7 +66,7 @@
                     </ul>
 
                     <a
-                        href="/my-portfolio/Christian_Gonzales_Resume.pdf"
+                        href="/my-portfolio/resume.pdf"
                         aria-label="Download"
                         download
                         class="inline-flex items-center bg-oxford-blue hover:bg-ocean-blue text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md" data-aos="fade-up"

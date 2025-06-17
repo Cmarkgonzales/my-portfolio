@@ -10,7 +10,7 @@
             <!-- Center Branding Logo -->
             <div class="absolute inset-4 flex items-center justify-center bg-oxford-blue rounded-full shadow-lg">
                 <img
-                    src="/portfolio_logo.svg"
+                    src="/assets/logo.svg"
                     alt="Loading Screen Logo"
                     class="rounded-full transition-all duration-300 h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 lg:h-28 lg:w-28 xl:h-32 xl:w-32"
                 />

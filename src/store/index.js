@@ -5,6 +5,7 @@ export const constantsStore = reactive({
     homeSection: {},
     socialLinks: [],
     aboutMe: {},
+    resumeLink: '/my-portfolio/resume.pdf', // Default resume link
     experiences: [],
     projects: [],
     mainSkills: [],

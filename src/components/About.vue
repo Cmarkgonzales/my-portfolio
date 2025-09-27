@@ -24,7 +24,7 @@
                         <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-chinese-bronze rounded-2xl flex items-center justify-center shadow-lg">
                             <div class="text-center text-white">
                                 <span class="text-3xl font-bold block">
-                                    3+
+                                    4+
                                 </span>
                                 <span class="text-sm font-medium">
                                     Years Exp.

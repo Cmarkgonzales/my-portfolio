@@ -1,7 +1,7 @@
 <template>
     <section
         id="home"
-        class="section pt-24 sm:pt-28 md:pt-32 pb-16 bg-gradient-to-r from-oxford-blue to-ocean-blue text-white min-h-screen flex items-center"
+        class="section pt-24 sm:pt-28 md:pt-32 pb-16 bg-gradient-to-r from-oxford-blue to-ocean-blue text-white min-h-[90vh] flex items-center"
     >
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center justify-between gap-10">
@@ -39,18 +39,20 @@
                         data-aos="zoom-in"
                         data-aos-delay="600"
                     >
-                        <a
-                            href="#contact"
-                            class="bg-dark-bronze hover:bg-chinese-bronze text-white px-6 py-3 rounded-lg font-medium transition-transform duration-300 transform hover:scale-105 shadow-lg text-center"
+                        <Button
+                            variant="primary"
+                            size="lg"
+                            @click="scrollTo('#contact')"
                         >
-                            Get in Touch
-                        </a>
-                        <a
-                            href="#projects"
-                            class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition duration-300 border border-white/20 text-center"
+                            Hire Me
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            size="lg"
+                            @click="scrollTo('#projects')"
                         >
                             View Projects
-                        </a>
+                        </Button>
                     </div>
                 </div>
 
@@ -105,9 +107,17 @@
 <script setup>
     import { onMounted, computed } from 'vue';
     import { constantsStore } from '@/store';
+    import Button from '@/components/ui/Button.vue';
 
     const introText = computed(() => constantsStore.homeSection.introText);
     const socialLinks = computed(() => constantsStore.socialLinks);
+
+    const scrollTo = (selector) => {
+        const target = document.querySelector(selector);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
 
     onMounted(() => {
         const name = "Christian Mark Gonzales";

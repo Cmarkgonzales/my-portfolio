@@ -1,20 +1,22 @@
 <template>
-    <main class="relative min-h-screen w-screen overflow-x-hidden">
+    <div class="relative min-h-screen w-screen overflow-x-hidden text-oxford-blue">
         <div v-if="isLoading" class="flex items-center justify-center h-screen bg-oxford-blue">
             <LoadingScreen />
         </div>
 
         <template v-else>
             <NavBar />
-            <Home />
-            <About />
-            <Experience />
-            <Skills />
-            <Projects />
-            <Contact />
+            <main>
+                <Home />
+                <About />
+                <Experience />
+                <Skills />
+                <Projects />
+                <Contact />
+            </main>
             <Footer />
         </template>
-    </main>
+    </div>
 </template>
 
 <script setup>

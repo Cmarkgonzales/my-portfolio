@@ -1,18 +1,14 @@
 <template>
-    <section
-        id="skills"
-        class="section py-24 bg-white"
-    >
-        <div class="container mx-auto px-4">
+    <Section id="skills" bg="default">
             <SectionHeader
                 title="My Expertise"
                 subTitle="Technical Skills"
             />
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-                <div
+                <Card
                     v-for="(skill, index) in mainSkills"
                     :key="`skill-${index}`"
-                    class="card p-8"
+                    class="p-8"
                     data-aos="zoom-in"
                     :data-aos-delay="index * 100"
                 >
@@ -43,7 +39,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
             
             <div
@@ -61,14 +57,15 @@
                     </span>
                 </div>
             </div>
-        </div>
-    </section>
+    </Section>
 </template>
 
 <script setup>
     import { computed } from 'vue';
     import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue';
+    import Section from '@/components/ui/Section.vue';
+    import Card from '@/components/ui/Card.vue';
 
     const mainSkills = computed(() => constantsStore.mainSkills);
     const additionalSkills = computed(() => constantsStore.additionalSkills);

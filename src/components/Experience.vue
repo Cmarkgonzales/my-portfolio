@@ -1,9 +1,5 @@
 <template>
-    <section
-        id="experience"
-        class="section py-24 bg-light-cyan"
-    >
-        <div class="container mx-auto px-4">
+    <Section id="experience" bg="light">
             <SectionHeader
                 title="My Journey"
                 subTitle="Work Experience"
@@ -45,8 +41,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+    </Section>
 </template>
 
 <script setup>
@@ -54,6 +49,7 @@
     import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue';
     import ExperienceCard from '@/generics/ExperienceCard.vue';
+    import Section from '@/components/ui/Section.vue';
 
     const experiences = computed(() => constantsStore.experiences);
 </script>

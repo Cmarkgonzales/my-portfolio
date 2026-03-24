@@ -1,9 +1,5 @@
 <template>
-    <section
-        id="about"
-        class="section py-24 bg-white"
-    >
-        <div class="container mx-auto px-4">
+    <Section id="about" bg="default">
             <SectionHeader
                 title="About Me"
                 subTitle="Who I Am"
@@ -75,14 +71,14 @@
                     </a>
                 </div>
             </div>
-        </div>
-    </section>
+    </Section>
 </template>
 
 <script setup>
     import { computed } from 'vue';
     import { constantsStore } from '@/store';
     import SectionHeader from '@/generics/SectionHeader.vue';
+    import Section from '@/components/ui/Section.vue';
 
     const aboutMe = computed(() => constantsStore.aboutMe);
     const resumeLink = computed(() => constantsStore.resumeLink);

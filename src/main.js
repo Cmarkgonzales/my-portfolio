@@ -13,7 +13,8 @@ app.mount('#app')
 // Initialize AOS after mount
 AOS.init({
     once: true,
-    duration: 800,
+    duration: 500,
     easing: 'ease-out-cubic',
-     offset: 100
+    offset: 100,
+    disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches
 })

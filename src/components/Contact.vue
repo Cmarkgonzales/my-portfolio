@@ -1,9 +1,5 @@
 <template>
-    <section
-        id="contact"
-        class="section py-24 bg-gradient-to-br from-oxford-blue to-ocean-blue text-white"
-    >
-        <div class="container mx-auto px-4">
+    <Section id="contact" bg="dark" class="bg-gradient-to-br from-oxford-blue to-ocean-blue">
             <SectionHeader
                 title="Contact"
                 subTitle="Get In Touch"
@@ -109,9 +105,11 @@
                                 placeholder="Your Message"
                             />
 
-                            <button
+                            <Button
                                 type="submit"
-                                class="w-full bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-lg font-medium transition duration-300 shadow-md flex items-center justify-center cursor-pointer"
+                                variant="primary"
+                                size="lg"
+                                class="w-full flex items-center justify-center cursor-pointer"
                                 :disabled="isSending"
                             >
                                 <template v-if="!isSending">
@@ -122,35 +120,17 @@
                                     <font-awesome-icon class="mr-2 animate-spin" icon="fas fa-spinner" />
                                     Sending...
                                 </template>
-                            </button>
+                            </Button>
                         </form>
 
-                        <transition name="fade">
-                            <div
-                                v-if="showModal"
-                                class="fixed inset-0 z-50 flex items-center justify-center bg-light-cyan/60 rounded-2xl backdrop-blur-sm"
-                            >
-                                <div class="bg-light-cyan rounded-lg p-6 max-w-sm w-full text-center shadow-xl text-oxford-blue">
-                                    <h2 class="text-xl font-bold mb-2">
-                                        {{ modalMessage.title }}
-                                    </h2>
-                                    <p class="mb-4">
-                                        {{ modalMessage.content }}
-                                    </p>
-                                    <button
-                                        class="mt-2 px-4 py-2 bg-chinese-bronze text-white rounded hover:bg-dark-bronze transition"
-                                        @click="showModal = false"
-                                    >
-                                        Close
-                                    </button>
-                                </div>
-                            </div>
-                        </transition>
+                        <Toast
+                            v-model:show="showModal"
+                            :message="modalMessage.content"
+                        />
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+    </Section>
 </template>
 
 <script setup>
@@ -160,6 +140,9 @@
     import SectionHeader from '@/generics/SectionHeader.vue';
     import FormInput from '@/generics/FormInput.vue';
     import FormTextArea from '@/generics/FormTextArea.vue';
+    import Section from '@/components/ui/Section.vue';
+    import Button from '@/components/ui/Button.vue';
+    import Toast from '@/components/ui/Toast.vue';
 
     const formData = reactive({
         name: '',

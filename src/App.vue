@@ -1,5 +1,6 @@
 <template>
     <div class="relative min-h-screen w-screen overflow-x-hidden text-oxford-blue">
+        <CursorTrail />
         <div v-if="isLoading" class="flex items-center justify-center h-screen bg-oxford-blue">
             <LoadingScreen />
         </div>
@@ -24,6 +25,7 @@
     import { useFirebaseConstants } from '@/composables/useFirebaseConstants';
 
     import LoadingScreen from './components/LoadingScreen.vue';
+    import CursorTrail from './components/CursorTrail.vue';
     import NavBar from '@/components/NavBar.vue';
     import Home from '@/components/Home.vue';
     import About from '@/components/About.vue';

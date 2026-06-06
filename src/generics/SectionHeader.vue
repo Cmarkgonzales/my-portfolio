@@ -1,15 +1,16 @@
 <template>
     <div
-        class="flex flex-col items-center mb-16"
-        data-aos="fade-down"
+        class="flex flex-col items-center mb-14 md:mb-[4.5rem] lg:mb-20 px-2"
+        data-aos="fade-up"
+        data-aos-duration="620"
     >
-        <span :class="['text-sm font-medium uppercase tracking-wider mb-2', titleColor]">
+        <span :class="['text-xs md:text-sm font-semibold uppercase tracking-[0.18em] mb-3', titleColor]">
             {{ title }}
         </span>
-        <h2 :class="['text-3xl md:text-4xl font-bold mb-4 text-center', subTitleColor]">
+        <h2 :class="['text-3xl md:text-4xl lg:text-5xl font-bold mb-5 text-center leading-tight', subTitleColor]">
             {{ subTitle }}
         </h2>
-        <div class="w-16 h-1 bg-chinese-bronze rounded-full"></div>
+        <div class="w-20 h-1 bg-chinese-bronze rounded-full"></div>
     </div>
 </template>
 

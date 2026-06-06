@@ -1,54 +1,62 @@
 <template>
-    <header>
+    <header class="fixed top-0 left-0 w-full z-40">
         <nav
-            class="fixed top-0 left-0 w-full bg-white px-4 py-3 shadow-sm z-30"
+            :class="[
+                'mx-auto mt-3 md:mt-4 w-[calc(100%-1rem)] md:w-[calc(100%-2rem)] max-w-7xl rounded-2xl border px-4 md:px-6 transition-all duration-300',
+                isScrolled
+                    ? 'surface-glass border-border-strong shadow-soft-dark py-2.5 md:py-3'
+                    : 'surface-glass border-border-subtle py-3.5 md:py-4'
+            ]"
             data-aos="fade-down"
         >
-            <div class="flex justify-between items-center max-w-7xl mx-auto">
+            <div class="flex justify-between items-center">
                 <div
                     class="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                    @click="scrollToSection('#home')"
                 >
                     <img
                         src="/assets/logo.svg"
                         alt="Nav Logo"
-                        class="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 xl:h-16 xl:w-16 rounded-full transition-all duration-300"
+                        class="h-10 w-10 sm:h-11 sm:w-11 rounded-full transition-all duration-300 ring-1 ring-white/20"
                     />
-                    <a
-                        href="#home"
-                        class="font-inters text-base sm:text-xl lg:text-2xl xl:text-3xl font-bold text-ocean-blue hover:text-ncs-blue transition-colors duration-300"
-                    >
-                        Chris<span class="text-dark-bronze hover:text-chinese-bronze">Chan</span>
-                    </a>
+                    <span class="text-lg sm:text-xl font-bold text-text-primary tracking-wide">
+                        Chris<span class="text-chinese-bronze">Chan</span>
+                    </span>
                 </div>
 
-                <div class="md:hidden z-40">
+                <div class="md:hidden z-50">
                     <button
                         type="button"
-                        class="text-oxford-blue text-3xl focus:outline-none"
-                        @click="mobileMenuVisible = true"
+                        class="text-text-primary text-2xl p-2 rounded-lg hover:bg-white/10 transition-colors"
+                        @click="openMobileMenu"
                         aria-label="Open mobile menu"
+                        :aria-expanded="mobileMenuVisible"
+                        aria-controls="mobile-nav-drawer"
                     >
                         <font-awesome-icon icon="fas fa-bars" />
                     </button>
                 </div>
 
-                <ul class="hidden md:flex items-center space-x-2 lg:space-x-6">
+                <ul class="hidden md:flex items-center gap-1 lg:gap-4">
                     <li
                         v-for="item in navLinks"
                         :key="`nav-link-${item.name}`"
-                        @click="scrollToSection(item.href)"
                     >
-                        <a
-                            :href="item.href"
-                            :class="[
-                                'relative inline-block px-4 py-2 rounded-full transition-all duration-300 ease-linear text-base lg:text-lg text-oxford-blue',
-                                activeLink === item.href
-                                ? 'bg-ocean-blue text-white'
-                                : 'hover:bg-ncs-blue/5 hover:text-ncs-blue'
-                            ]"
+                        <button
+                            type="button"
+                            class="relative px-3 py-2 text-sm lg:text-base font-medium text-text-secondary transition-colors duration-300 hover:text-text-primary"
+                            :class="{ 'text-text-primary': activeLink === item.href }"
+                            @click="scrollToSection(item.href)"
+                            :aria-current="activeLink === item.href ? 'page' : undefined"
                         >
                             {{ item.name }}
-                        </a>
+                            <span
+                                :class="[
+                                    'absolute left-3 right-3 -bottom-0.5 h-[2px] origin-center rounded-full transition-transform duration-300 bg-ncs-blue',
+                                    activeLink === item.href ? 'scale-x-100' : 'scale-x-0'
+                                ]"
+                            ></span>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -56,37 +64,57 @@
 
         <div
             :class="[
-                'fixed top-0 right-0 w-64 h-full bg-white z-40 p-8 flex flex-col space-y-6 shadow-lg transform transition-transform duration-300 ease-in-out md:hidden',
+                'fixed inset-0 z-40 md:hidden transition-opacity duration-300',
+                mobileMenuVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            ]"
+            @click="closeMobileMenu"
+        >
+            <div class="absolute inset-0 bg-[#020810]/50 backdrop-blur-sm"></div>
+        </div>
+
+        <aside
+            id="mobile-nav-drawer"
+            :class="[
+                'fixed top-0 right-0 h-full w-[min(18rem,85vw)] z-50 p-7 flex flex-col gap-8 surface-glass border-l border-border-strong shadow-soft-dark transform transition-transform duration-300 ease-in-out md:hidden',
                 mobileMenuVisible ? 'translate-x-0' : 'translate-x-full'
             ]"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation menu"
+            @click.stop
         >
             <button
                 type="button"
-                class="absolute top-4 right-4 text-3xl text-oxford-blue focus:outline-none"
+                class="absolute top-4 right-4 text-2xl text-text-primary rounded-lg p-2 hover:bg-white/10 transition-colors"
                 @click="closeMobileMenu"
                 aria-label="Close mobile menu"
             >
                 <font-awesome-icon icon="fas fa-xmark" />
             </button>
 
-            <ul class="flex flex-col space-y-5 mt-6">
+            <ul class="flex flex-col space-y-3 mt-8">
                 <li
                     v-for="item in navLinks"
                     :key="`mobile-link-${item.name}`"
-                    @click="scrollToSection(item.href)"
                 >
-                    <a
-                        :href="item.href"
+                    <button
+                        type="button"
                         :class="[
-                            'relative inline-block px-4 py-2 rounded-full transition-all duration-300 ease-linear text-base text-oxford-blue',
-                            activeLink === item.href ? 'bg-ocean-blue text-white' : 'hover:bg-ncs-blue/10 hover:text-ncs-blue'
+                            'relative w-full text-left px-4 py-3 rounded-xl transition-all duration-300 ease-linear text-base border',
+                            activeLink === item.href
+                                ? 'bg-ncs-blue/20 border-ncs-blue/40 text-text-primary'
+                                : 'text-text-secondary border-transparent hover:bg-white/10 hover:text-text-primary'
                         ]"
+                        @click="scrollToSection(item.href)"
+                        :aria-current="activeLink === item.href ? 'page' : undefined"
                     >
                         {{ item.name }}
-                    </a>
+                    </button>
                 </li>
             </ul>
-        </div>
+        </aside>
+
+        <div class="fixed top-0 left-0 z-50 h-[2px] bg-ncs-blue/80 transition-[width] duration-150 ease-linear" :style="{ width: `${scrollProgress}%` }"></div>
     </header>
 </template>
 
@@ -97,8 +125,14 @@
     const navLinks = computed(() => constantsStore.navLinks);
     const activeLink = ref('#home');
     const mobileMenuVisible = ref(false);
+    const isScrolled = ref(false);
+    const scrollProgress = ref(0);
     const sections = ref([]);
     let observer = null;
+
+    const openMobileMenu = () => {
+        mobileMenuVisible.value = true;
+    };
 
     const scrollToSection = (selector) => {
         const target = document.querySelector(selector);
@@ -111,15 +145,26 @@
 
     const closeMobileMenu = () => {
         mobileMenuVisible.value = false;
-    }
+    };
 
     // Escape key closes mobile menu
     const handleKeydown = (e) => {
-        if (e.key === 'Escape') closeMobileMenu();
-    }
+        if (e.key === 'Escape') {
+            closeMobileMenu();
+        }
+    };
+
+    const handleScroll = () => {
+        isScrolled.value = window.scrollY > 24;
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
+        scrollProgress.value = Math.min(100, Math.max(0, progress));
+    };
 
     const initIntersectionObserver = () => {
-        if (observer) observer.disconnect();
+        if (observer) {
+            observer.disconnect();
+        }
 
         sections.value = navLinks.value
             .map(link => document.querySelector(link.href))
@@ -135,28 +180,38 @@
                     activeLink.value = `#${visible[0].target.id}`;
                 }
             },
-            { root: null, threshold: 0.3 }
+            { root: null, threshold: 0.45, rootMargin: '-20% 0px -35% 0px' }
         );
 
         sections.value.forEach(section => observer.observe(section));
-    }
+    };
 
     onMounted(() => {
         requestAnimationFrame(() => {
             history.replaceState(null, '', '#home');
             initIntersectionObserver();
             window.addEventListener('keydown', handleKeydown);
+            window.addEventListener('scroll', handleScroll, { passive: true });
+            handleScroll();
         });
     });
 
     onBeforeUnmount(() => {
-        if (observer) observer.disconnect();
+        if (observer) {
+            observer.disconnect();
+        }
         window.removeEventListener('keydown', handleKeydown);
+        window.removeEventListener('scroll', handleScroll);
+        document.body.style.overflow = '';
     });
 
     watch(activeLink, (newValue, oldValue) => {
         if (newValue && newValue !== oldValue) {
             history.replaceState(null, '', newValue);
         }
+    });
+
+    watch(mobileMenuVisible, (isOpen) => {
+        document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 </script>

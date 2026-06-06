@@ -5,7 +5,7 @@
                 subTitle="Get In Touch"
                 subTitleColor="text-white"
             />
-            <div class="flex flex-col md:flex-row gap-12 max-w-5xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-14 lg:gap-16 max-w-6xl mx-auto">
                 <div
                     class="md:w-2/5"
                     data-aos="fade-right"

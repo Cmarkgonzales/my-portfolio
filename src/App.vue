@@ -1,5 +1,11 @@
 <template>
-    <div class="relative min-h-screen w-screen overflow-x-hidden text-oxford-blue">
+    <div class="relative min-h-screen w-full overflow-x-hidden text-text-primary">
+        <a
+            href="#main-content"
+            class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[99999] focus:rounded-lg focus:bg-oxford-blue focus:px-4 focus:py-2 focus:text-white focus:shadow-soft-dark"
+        >
+            Skip to main content
+        </a>
         <CursorTrail />
         <div v-if="isLoading" class="flex items-center justify-center h-screen bg-oxford-blue">
             <LoadingScreen />
@@ -7,7 +13,7 @@
 
         <template v-else>
             <NavBar />
-            <main>
+            <main id="main-content" tabindex="-1">
                 <Home />
                 <About />
                 <Experience />

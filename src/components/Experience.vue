@@ -4,9 +4,9 @@
                 title="My Journey"
                 subTitle="Work Experience"
             />
-            <div class="relative max-w-4xl mx-auto">
+            <div class="relative max-w-5xl mx-auto">
                 <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full timeline-line"></div>
-                <div class="timeline-container space-y-12">
+                <div class="timeline-container space-y-14">
                     <div
                         v-for="(item, index) in experiences"
                         :key="`exp-item-${index}`"

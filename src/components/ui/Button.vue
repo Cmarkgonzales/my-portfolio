@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[
-      'inline-flex items-center justify-center font-medium transition-all duration-300 focus-ring',
+      'inline-flex items-center justify-center font-medium transition-all duration-300 focus-ring active:scale-[0.99] disabled:active:scale-100',
       variants[variant],
       sizes[size],
       { 'opacity-50 cursor-not-allowed': disabled }
@@ -32,10 +32,10 @@ const props = defineProps({
 defineEmits(['click'])
 
 const variants = {
-  primary: 'bg-chinese-bronze hover:bg-dark-bronze text-white rounded-lg shadow-soft hover:shadow-hover hover:-translate-y-0.5',
-  secondary: 'bg-white/10 hover:bg-white/20 text-white rounded-lg border border-white/20 hover:-translate-y-0.5',
-  outline: 'border-2 border-chinese-bronze text-chinese-bronze hover:bg-chinese-bronze hover:text-white rounded-lg hover:-translate-y-0.5',
-  ghost: 'bg-transparent hover:bg-gray-100 text-gray-700 rounded-lg'
+  primary: 'bg-chinese-bronze hover:bg-dark-bronze text-white rounded-xl shadow-soft hover:shadow-[0_0_0_1px_rgba(217,128,50,0.28),0_0_26px_rgba(217,128,50,0.24)] hover:-translate-y-0.5',
+  secondary: 'bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/20 hover:border-white/30 hover:shadow-[0_0_0_1px_rgba(4,138,191,0.28),0_0_20px_rgba(4,138,191,0.18)] hover:-translate-y-0.5',
+  outline: 'border-2 border-chinese-bronze text-chinese-bronze hover:bg-chinese-bronze hover:text-white rounded-xl hover:shadow-[0_0_0_1px_rgba(217,128,50,0.3),0_0_22px_rgba(217,128,50,0.24)] hover:-translate-y-0.5',
+  ghost: 'bg-transparent hover:bg-white/10 text-text-secondary hover:text-text-primary rounded-xl'
 }
 
 const sizes = {

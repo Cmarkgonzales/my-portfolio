@@ -12,9 +12,16 @@ app.mount('#app')
 
 // Initialize AOS after mount
 AOS.init({
-    once: true,
-    duration: 500,
+    once: false,
+    mirror: false,
+    duration: 620,
     easing: 'ease-out-cubic',
-    offset: 100,
-    disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches
-})
+    offset: 72,
+    delay: 40,
+    anchorPlacement: 'top-bottom',
+    disable: () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+});
+
+window.addEventListener('resize', () => {
+    AOS.refreshHard();
+}, { passive: true });

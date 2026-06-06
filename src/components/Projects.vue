@@ -1,44 +1,53 @@
 <template>
-    <Section id="projects" bg="light">
+    <Section id="projects" bg="muted">
         <SectionHeader
             title="My Work"
             subTitle="Featured Projects"
+            subTitleColor="text-text-primary"
         />
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mt-14">
             <Card
                 v-for="project in myProjects"
                 :key="project.name"
-                class="flex flex-col h-full"
+                variant="glass"
+                class="group flex flex-col h-full"
                 data-category="web"
                 data-aos="fade-up"
             >
-                <div class="relative h-48 sm:h-56 overflow-hidden">
+                <div class="relative h-52 sm:h-56 overflow-hidden">
                     <img
-                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         :src="project.image"
                         :alt="project.name"
                     />
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#040c17]/85 via-[#040c17]/25 to-transparent"></div>
+                    <Tag
+                        variant="primary"
+                        class="absolute top-3 left-3 capitalize whitespace-nowrap"
+                    >
+                        {{ project.type }}
+                    </Tag>
                 </div>
                 <div class="p-6 flex flex-col flex-grow">
-                    <div class="flex justify-between items-start mb-3">
-                        <h3 class="text-xl font-bold text-oxford-blue leading-tight">{{ project.name }}</h3>
-                        <Tag variant="primary" class="capitalize whitespace-nowrap ml-3">{{ project.type }}</Tag>
+                    <div class="mb-3">
+                        <h3 class="text-xl font-bold text-text-primary leading-tight">{{ project.name }}</h3>
                     </div>
-                    <p class="text-gray-600 text-sm mb-5 flex-grow leading-relaxed">
+                    <p class="text-text-secondary text-sm mb-5 flex-grow leading-relaxed">
                         {{ project.description }}
                     </p>
                     <div class="flex flex-wrap gap-2 mb-6">
-                        <Tag
+                        <span
                             v-for="tech in project.technologies"
                             :key="`tech-${project.name}-${tech}`"
+                            class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium border border-ncs-blue/30 bg-ncs-blue/12 text-sky-cyan"
                         >
                             {{ tech }}
-                        </Tag>
+                        </span>
                     </div>
-                    <div class="flex space-x-6 mt-auto border-t border-gray-100 pt-5">
+                    <div class="flex space-x-4 mt-auto border-t border-border-subtle pt-5">
                         <a
                             :href="project.demoLink"
-                            class="text-ncs-blue hover:text-chinese-bronze transition-colors font-medium flex items-center focus-ring text-sm rounded-sm"
+                            class="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium bg-ncs-blue/15 text-sky-cyan hover:bg-ncs-blue/25 hover:text-white transition-colors focus-ring"
                             target="_blank"
                             rel="noopener noreferrer"
                         >
@@ -49,7 +58,7 @@
                             :href="project.githubLink"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="text-gray-500 hover:text-oxford-blue transition-colors font-medium flex items-center focus-ring text-sm rounded-sm"
+                            class="inline-flex items-center rounded-lg px-3 py-2 text-sm font-medium bg-white/8 text-text-secondary hover:bg-white/15 hover:text-text-primary transition-colors focus-ring"
                         >
                             <font-awesome-icon class="mr-2" icon="fab fa-github" />
                             Source
@@ -63,7 +72,7 @@
             class="mt-16 mx-auto max-w-md text-center transition-opacity duration-700 animate-fade-in"
             data-aos="fade-up"
         >
-            <p class="text-gray-500 italic flex items-center justify-center gap-2">
+            <p class="text-text-muted italic flex items-center justify-center gap-2">
                 <font-awesome-icon class="text-ncs-blue" icon="fas fa-clock" />
                 More projects to come soon. Stay tuned!
             </p>

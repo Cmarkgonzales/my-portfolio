@@ -1,7 +1,8 @@
 <template>
     <div
         class="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow"
-        :data-aos="index % 2 === 0 ? 'fade-right' : 'fade-left'"
+        :data-reveal="index % 2 === 0 ? 'fade-right' : 'fade-left'"
+        :style="{ '--reveal-delay': `${100 + index * 100}ms` }"
     >
         <div class="flex items-center justify-between mb-3 flex-wrap gap-2">
             <h4 class="text-base font-semibold text-dark-bronze mb-1">

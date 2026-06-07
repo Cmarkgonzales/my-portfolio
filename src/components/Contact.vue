@@ -1,5 +1,5 @@
 <template>
-    <Section id="contact" bg="dark" class="bg-gradient-to-br from-oxford-blue to-ocean-blue">
+    <Section id="contact" bg="dark" class="bg-gradient-to-br from-oxford-blue to-ocean-blue [&_.container]:bg-gradient-to-br [&_.container]:from-oxford-blue [&_.container]:to-ocean-blue">
             <SectionHeader
                 title="Contact"
                 subTitle="Get In Touch"
@@ -8,7 +8,7 @@
             <div class="flex flex-col md:flex-row gap-14 lg:gap-16 max-w-6xl mx-auto">
                 <div
                     class="md:w-2/5"
-                    data-aos="fade-right"
+                    data-reveal="fade-right"
                 >
                     <div class="bg-white/5 rounded-2xl p-8 backdrop-blur-sm border border-white/10 shadow-lg">
                         <h3 class="text-2xl font-semibold mb-8">
@@ -58,7 +58,8 @@
 
                 <div
                     class="md:w-3/5"
-                    data-aos="fade-left"
+                    data-reveal="fade-left"
+                    :style="{ '--reveal-delay': '120ms' }"
                 >
                     <div class="bg-white/5 rounded-2xl p-8 backdrop-blur-sm border border-white/10 shadow-lg">
                         <h3 class="text-2xl font-semibold mb-6">

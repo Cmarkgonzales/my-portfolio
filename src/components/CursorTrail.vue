@@ -5,6 +5,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 
+const GLYPHS = ['{}', '//', '=>', '[]', 'const', '</>'];
+const DEFAULT_COLOR = '#07B2D9';
+const BRONZE_COLOR = '#D98032';
+const GLYPH_FONT = '600 11px "DM Mono", monospace';
+
 const canvas = ref(null);
 const isEnabled = ref(false);
 let ctx = null;
@@ -12,75 +17,50 @@ let particles = [];
 let animationFrameId = null;
 let queue = [];
 let running = false;
-const TRAIL_DELAY = 120;
-const MAX_QUEUE_LENGTH = 90;
-const MAX_PARTICLES = 130;
+const TRAIL_DELAY = 160;
+const MIN_QUEUE_DISTANCE = 20;
+const MIN_SPAWN_DISTANCE = 16;
+const CURSOR_OFFSET = 14;
+const MAX_QUEUE_LENGTH = 60;
+const MAX_PARTICLES = 90;
 
-// Gradient colors and interpolation helpers
-const START_COLOR = '#048ABF';
-const END_COLOR = '#013A63';
-
-const hex2rgb = (hex) => {
-  const v = parseInt(hex.replace('#', ''), 16);
-  return { r: (v >> 16) & 255, g: (v >> 8) & 255, b: v & 255 };
-};
-
-const interpolateColor = (color1, color2, factor) => {
-  const c1 = hex2rgb(color1);
-  const c2 = hex2rgb(color2);
-  const r = Math.round(c1.r + factor * (c2.r - c1.r));
-  const g = Math.round(c1.g + factor * (c2.g - c1.g));
-  const b = Math.round(c1.b + factor * (c2.b - c1.b));
-  return `rgb(${r}, ${g}, ${b})`;
-};
+let lastQueuedPos = null;
+let lastSpawnPos = null;
+let lastMoveDx = 0;
+let lastMoveDy = -1;
 
 class Particle {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.size = Math.random() * 5 + 3; 
-    this.speedX = Math.random() * 2 - 1;
-    this.speedY = Math.random() * 2 - 1;
+  constructor(x, y, color, dirX, dirY) {
+    const len = Math.hypot(dirX, dirY) || 1;
+    const nx = dirX / len;
+    const ny = dirY / len;
+    const px = -ny;
+    const py = nx;
+    const lane = (Math.random() - 0.5) * 10;
+
+    this.x = x - nx * 6 + px * lane;
+    this.y = y - ny * 6 + py * lane;
+    this.glyph = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+    this.color = color;
     this.life = 1;
-    this.decay = Math.random() * 0.02 + 0.02;
+    this.decay = Math.random() * 0.015 + 0.018;
+    this.speedX = -nx * 0.35 + (Math.random() - 0.5) * 0.6;
+    this.speedY = -ny * 0.35 + (Math.random() - 0.5) * 0.6;
   }
-  
+
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
     this.life -= this.decay;
-    this.size *= 0.95;
   }
 
-  draw(ctx) {
-    ctx.beginPath();
-    const x = this.x;
-    const y = this.y;
-    const s = this.size;
-    
-    const innerS = s * 0.15;
-    
-    ctx.moveTo(x, y - s);
-    ctx.lineTo(x + innerS, y - innerS);
-    ctx.lineTo(x + s, y);
-    ctx.lineTo(x + innerS, y + innerS);
-    ctx.lineTo(x, y + s);
-    ctx.lineTo(x - innerS, y + innerS);
-    ctx.lineTo(x - s, y);
-    ctx.lineTo(x - innerS, y - innerS);
-    ctx.closePath();
-    
-    const fadeFactor = 1 - Math.max(0, this.life);
-    const currentColor = interpolateColor(START_COLOR, END_COLOR, fadeFactor);
-    ctx.fillStyle = currentColor;
-    
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = currentColor;
-    
-    ctx.globalAlpha = Math.max(0, this.life * 0.9);
-    ctx.fill();
-    
-    ctx.shadowBlur = 0;
+  draw(context) {
+    context.font = GLYPH_FONT;
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillStyle = this.color;
+    context.globalAlpha = Math.max(0, this.life * 0.85);
+    context.fillText(this.glyph, this.x, this.y);
   }
 }
 
@@ -97,8 +77,30 @@ const resizeCanvas = () => {
   }
 };
 
+const resolveTrailColor = (clientX, clientY) => {
+  const target = document.elementFromPoint(clientX, clientY);
+  const isInteractive = target?.closest('a, button, [role="button"]');
+  return isInteractive ? BRONZE_COLOR : DEFAULT_COLOR;
+};
+
 const handleMouseMove = (e) => {
-  queue.push({ x: e.clientX + 16, y: e.clientY + 16, time: Date.now() });
+  const x = e.clientX + CURSOR_OFFSET;
+  const y = e.clientY + CURSOR_OFFSET;
+
+  if (lastQueuedPos) {
+    const dx = x - lastQueuedPos.x;
+    const dy = y - lastQueuedPos.y;
+    if (dx * dx + dy * dy < MIN_QUEUE_DISTANCE * MIN_QUEUE_DISTANCE) {
+      return;
+    }
+    lastMoveDx = dx;
+    lastMoveDy = dy;
+  }
+
+  lastQueuedPos = { x, y };
+  const color = resolveTrailColor(e.clientX, e.clientY);
+  queue.push({ x, y, time: Date.now(), color, dirX: lastMoveDx, dirY: lastMoveDy });
+
   if (queue.length > MAX_QUEUE_LENGTH) {
     queue.splice(0, queue.length - MAX_QUEUE_LENGTH);
   }
@@ -128,18 +130,28 @@ const handleVisibilityChange = () => {
 
 const animate = () => {
   if (!running || !ctx || !canvas.value) return;
-  
+
   ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
-  
+
   const currentTime = Date.now();
-  
+
   while (queue.length > 0 && currentTime - queue[0].time >= TRAIL_DELAY) {
     const pos = queue.shift();
+
+    if (lastSpawnPos) {
+      const dx = pos.x - lastSpawnPos.x;
+      const dy = pos.y - lastSpawnPos.y;
+      if (dx * dx + dy * dy < MIN_SPAWN_DISTANCE * MIN_SPAWN_DISTANCE) {
+        continue;
+      }
+    }
+
     if (particles.length < MAX_PARTICLES) {
-      particles.push(new Particle(pos.x, pos.y));
+      particles.push(new Particle(pos.x, pos.y, pos.color, pos.dirX, pos.dirY));
+      lastSpawnPos = { x: pos.x, y: pos.y };
     }
   }
-  
+
   if (particles.length > MAX_PARTICLES) {
     particles.splice(0, particles.length - MAX_PARTICLES);
   }
@@ -147,13 +159,13 @@ const animate = () => {
   for (let i = 0; i < particles.length; i++) {
     particles[i].update();
     particles[i].draw(ctx);
-    
-    if (particles[i].life <= 0 || particles[i].size <= 0.2) {
+
+    if (particles[i].life <= 0) {
       particles.splice(i, 1);
       i--;
     }
   }
-  
+
   ctx.globalAlpha = 1;
   animationFrameId = requestAnimationFrame(animate);
 };
@@ -182,6 +194,10 @@ onUnmounted(() => {
   stopAnimation();
   particles = [];
   queue = [];
+  lastQueuedPos = null;
+  lastSpawnPos = null;
+  lastMoveDx = 0;
+  lastMoveDy = -1;
 
   window.removeEventListener('resize', resizeCanvas);
   window.removeEventListener('mousemove', handleMouseMove);

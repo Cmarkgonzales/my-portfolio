@@ -7,20 +7,20 @@
                     ? 'surface-glass border-border-strong shadow-soft-dark py-2.5 md:py-3'
                     : 'surface-glass border-border-subtle py-3.5 md:py-4'
             ]"
-            data-aos="fade-down"
         >
             <div class="flex justify-between items-center">
                 <div
-                    class="flex items-center space-x-3 cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                    class="flex items-center space-x-2 sm:space-x-3 cursor-pointer hover:opacity-90 transition-opacity duration-300"
                     @click="scrollToSection('#home')"
                 >
                     <img
                         src="/assets/logo.svg"
-                        alt="Nav Logo"
-                        class="h-10 w-10 sm:h-11 sm:w-11 rounded-full transition-all duration-300 ring-1 ring-white/20"
+                        alt=""
+                        aria-hidden="true"
+                        class="h-8 w-8 sm:h-9 sm:w-9 rounded-full transition-all duration-300 ring-1 ring-white/20"
                     />
-                    <span class="text-lg sm:text-xl font-bold text-text-primary tracking-wide">
-                        Chris<span class="text-chinese-bronze">Chan</span>
+                    <span class="font-mono text-sm sm:text-base text-sky-cyan">
+                        cm_gonzales <span class="text-chinese-bronze">~/</span>
                     </span>
                 </div>
 
@@ -37,28 +37,41 @@
                     </button>
                 </div>
 
-                <ul class="hidden md:flex items-center gap-1 lg:gap-4">
-                    <li
-                        v-for="item in navLinks"
-                        :key="`nav-link-${item.name}`"
-                    >
-                        <button
-                            type="button"
-                            class="relative px-3 py-2 text-sm lg:text-base font-medium text-text-secondary transition-colors duration-300 hover:text-text-primary"
-                            :class="{ 'text-text-primary': activeLink === item.href }"
-                            @click="scrollToSection(item.href)"
-                            :aria-current="activeLink === item.href ? 'page' : undefined"
+                <div class="hidden md:flex items-center gap-1 lg:gap-4">
+                    <ul class="flex items-center gap-1 lg:gap-4">
+                        <li
+                            v-for="item in navLinks"
+                            :key="`nav-link-${item.name}`"
                         >
-                            {{ item.name }}
-                            <span
-                                :class="[
-                                    'absolute left-3 right-3 -bottom-0.5 h-[2px] origin-center rounded-full transition-transform duration-300 bg-ncs-blue',
-                                    activeLink === item.href ? 'scale-x-100' : 'scale-x-0'
-                                ]"
-                            ></span>
-                        </button>
-                    </li>
-                </ul>
+                            <button
+                                type="button"
+                                class="relative px-3 py-2 text-sm lg:text-base font-medium text-text-secondary transition-colors duration-300 hover:text-text-primary"
+                                :class="{ 'text-text-primary': activeLink === item.href }"
+                                @click="scrollToSection(item.href)"
+                                :aria-current="activeLink === item.href ? 'page' : undefined"
+                            >
+                                {{ item.name }}
+                                <span
+                                    :class="[
+                                        'absolute left-3 right-3 -bottom-0.5 h-[2px] origin-center rounded-full transition-transform duration-300 bg-ncs-blue',
+                                        activeLink === item.href ? 'scale-x-100' : 'scale-x-0'
+                                    ]"
+                                ></span>
+                            </button>
+                        </li>
+                    </ul>
+                    <span
+                        ref="hireMeMagneticRef"
+                        class="inline-block ml-1 lg:ml-2"
+                        @mouseenter="hireMeMagnetic.onMouseEnter"
+                        @mousemove="hireMeMagnetic.onMouseMove"
+                        @mouseleave="hireMeMagnetic.onMouseLeave"
+                    >
+                        <Button variant="primary" size="sm" @click="scrollToSection('#contact')">
+                            Hire Me
+                        </Button>
+                    </span>
+                </div>
             </div>
         </nav>
 
@@ -112,6 +125,12 @@
                     </button>
                 </li>
             </ul>
+
+            <div class="mt-auto pt-4 border-t border-border-subtle">
+                <Button variant="primary" size="md" class="w-full" @click="scrollToSection('#contact')">
+                    Hire Me
+                </Button>
+            </div>
         </aside>
 
         <div class="fixed top-0 left-0 z-50 h-[2px] bg-ncs-blue/80 transition-[width] duration-150 ease-linear" :style="{ width: `${scrollProgress}%` }"></div>
@@ -121,14 +140,19 @@
 <script setup>
     import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
     import { constantsStore } from '@/store';
+    import Button from '@/components/ui/Button.vue';
+    import { useMagneticButton } from '@/composables/useMagneticButton';
 
     const navLinks = computed(() => constantsStore.navLinks);
     const activeLink = ref('#home');
     const mobileMenuVisible = ref(false);
     const isScrolled = ref(false);
     const scrollProgress = ref(0);
-    const sections = ref([]);
-    let observer = null;
+    const SCROLL_SPY_OFFSET = 120;
+    let scrollSpyFrame = null;
+
+    const hireMeMagneticRef = ref(null);
+    const hireMeMagnetic = useMagneticButton(hireMeMagneticRef);
 
     const openMobileMenu = () => {
         mobileMenuVisible.value = true;
@@ -141,17 +165,50 @@
             activeLink.value = selector;
         }
         mobileMenuVisible.value = false;
-    }
+    };
 
     const closeMobileMenu = () => {
         mobileMenuVisible.value = false;
     };
 
-    // Escape key closes mobile menu
     const handleKeydown = (e) => {
         if (e.key === 'Escape') {
             closeMobileMenu();
         }
+    };
+
+    const updateActiveSectionFromScroll = () => {
+        const links = navLinks.value;
+        if (!links.length) return;
+
+        const scrollPosition = window.scrollY + SCROLL_SPY_OFFSET;
+        let current = links[0].href;
+
+        links.forEach((link) => {
+            const section = document.querySelector(link.href);
+            if (!section) return;
+
+            const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+            if (sectionTop <= scrollPosition) {
+                current = link.href;
+            }
+        });
+
+        const nearPageBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8;
+        if (nearPageBottom) {
+            current = links[links.length - 1].href;
+        }
+
+        activeLink.value = current;
+    };
+
+    const scheduleScrollSpyUpdate = () => {
+        if (scrollSpyFrame !== null) return;
+
+        scrollSpyFrame = requestAnimationFrame(() => {
+            updateActiveSectionFromScroll();
+            scrollSpyFrame = null;
+        });
     };
 
     const handleScroll = () => {
@@ -159,51 +216,32 @@
         const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
         const progress = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
         scrollProgress.value = Math.min(100, Math.max(0, progress));
-    };
-
-    const initIntersectionObserver = () => {
-        if (observer) {
-            observer.disconnect();
-        }
-
-        sections.value = navLinks.value
-            .map(link => document.querySelector(link.href))
-            .filter(Boolean);
-
-        observer = new IntersectionObserver(
-            entries => {
-                const visible = entries
-                    .filter(entry => entry.isIntersecting)
-                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-                if (visible.length > 0) {
-                    activeLink.value = `#${visible[0].target.id}`;
-                }
-            },
-            { root: null, threshold: 0.45, rootMargin: '-20% 0px -35% 0px' }
-        );
-
-        sections.value.forEach(section => observer.observe(section));
+        scheduleScrollSpyUpdate();
     };
 
     onMounted(() => {
-        requestAnimationFrame(() => {
-            history.replaceState(null, '', '#home');
-            initIntersectionObserver();
-            window.addEventListener('keydown', handleKeydown);
-            window.addEventListener('scroll', handleScroll, { passive: true });
-            handleScroll();
-        });
+        window.addEventListener('keydown', handleKeydown);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', scheduleScrollSpyUpdate, { passive: true });
+        handleScroll();
+        scheduleScrollSpyUpdate();
     });
 
     onBeforeUnmount(() => {
-        if (observer) {
-            observer.disconnect();
+        if (scrollSpyFrame !== null) {
+            cancelAnimationFrame(scrollSpyFrame);
         }
         window.removeEventListener('keydown', handleKeydown);
         window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', scheduleScrollSpyUpdate);
         document.body.style.overflow = '';
     });
+
+    watch(navLinks, (links) => {
+        if (links.length > 0) {
+            scheduleScrollSpyUpdate();
+        }
+    }, { immediate: true });
 
     watch(activeLink, (newValue, oldValue) => {
         if (newValue && newValue !== oldValue) {

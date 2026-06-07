@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 
@@ -59,12 +59,24 @@
             opacity: 0.9;
         }
     }
+
+    @keyframes heroFadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
 }
 
 @layer base {
     :root {
         --font-display: "Syne", sans-serif;
         --font-body: "DM Sans", sans-serif;
+        --font-mono: "DM Mono", monospace;
         --space-section-y: clamp(4.5rem, 8vw, 7rem);
         --space-stack-md: clamp(1.25rem, 2vw, 1.75rem);
         --space-stack-lg: clamp(2rem, 3vw, 3rem);
@@ -106,9 +118,10 @@
             transition-delay: 0s !important;
         }
 
-        [data-aos] {
+        [data-reveal] {
             opacity: 1 !important;
             transform: none !important;
+            transition: none !important;
         }
     }
 }
@@ -165,6 +178,18 @@
         box-shadow: 0 0 0 1px rgba(4, 138, 191, 0.35), 0 0 22px rgba(4, 138, 191, 0.2);
     }
 
+    .hero-enter {
+        animation: heroFadeUp 0.7s ease-out both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hero-enter {
+            animation: none;
+            opacity: 1;
+            transform: none;
+        }
+    }
+
     .avatar-container {
         @apply relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 xl:w-[28rem] xl:h-[28rem];
     }
@@ -217,7 +242,38 @@
         box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
     }
 
-    [data-aos] {
+    [data-reveal] {
+        opacity: 0;
+        transform: translate3d(0, 28px, 0);
+        transition:
+            opacity 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition-delay: var(--reveal-delay, 0ms);
         will-change: transform, opacity;
+    }
+
+    [data-reveal].is-revealed {
+        opacity: 1;
+        transform: none;
+    }
+
+    [data-reveal='fade-up'] {
+        transform: translate3d(0, 28px, 0);
+    }
+
+    [data-reveal='fade-down'] {
+        transform: translate3d(0, -28px, 0);
+    }
+
+    [data-reveal='fade-right'] {
+        transform: translate3d(-40px, 0, 0);
+    }
+
+    [data-reveal='fade-left'] {
+        transform: translate3d(40px, 0, 0);
+    }
+
+    [data-reveal='zoom-in'] {
+        transform: scale(0.94);
     }
 }

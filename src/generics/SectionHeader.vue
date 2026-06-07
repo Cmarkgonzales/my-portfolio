@@ -1,8 +1,7 @@
 <template>
     <div
         class="flex flex-col items-center mb-14 md:mb-[4.5rem] lg:mb-20 px-2"
-        data-aos="fade-up"
-        data-aos-duration="620"
+        data-reveal="fade-up"
     >
         <span :class="['text-xs md:text-sm font-semibold uppercase tracking-[0.18em] mb-3', titleColor]">
             {{ title }}

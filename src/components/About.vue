@@ -8,7 +8,7 @@
             <div class="flex flex-col md:flex-row items-center gap-14 lg:gap-[4.75rem]">
                 <div
                     class="md:w-2/5"
-                    data-aos="fade-right"
+                    data-reveal="fade-right"
                 >
                     <div class="relative">
                         <div class="w-full h-96 bg-light-cyan rounded-2xl overflow-hidden shadow-lg">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="md:w-3/5 stack-md" data-aos="fade-left" data-aos-delay="400">
+                <div class="md:w-3/5 stack-md" data-reveal="fade-left" :style="{ '--reveal-delay': '400ms' }">
                     <h3 class="text-2xl lg:text-3xl font-semibold text-text-primary">
                         Full Stack Developer
                     </h3>
@@ -47,8 +47,8 @@
 
                     <ul
                         class="grid grid-cols-1 md:grid-cols-2 gap-6"
-                        data-aos="zoom-in"
-                        data-aos-delay="600"
+                        data-reveal="zoom-in"
+                        :style="{ '--reveal-delay': '600ms' }"
                     >
                         <li
                             v-for="(item, index) in aboutMe.personalInfo"
@@ -64,8 +64,9 @@
                     <a
                         :href="resumeLink"
                         aria-label="Download"
-                        class="inline-flex items-center bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-xl font-medium transition duration-300 shadow-[0_0_0_1px_rgba(217,128,50,0.28),0_0_24px_rgba(217,128,50,0.22)] hover:shadow-[0_0_0_1px_rgba(217,128,50,0.45),0_0_30px_rgba(217,128,50,0.35)]" data-aos="fade-up"
-                        data-aos-delay="600"
+                        class="inline-flex items-center bg-chinese-bronze hover:bg-dark-bronze text-white px-6 py-3 rounded-xl font-medium transition duration-300 shadow-[0_0_0_1px_rgba(217,128,50,0.28),0_0_24px_rgba(217,128,50,0.22)] hover:shadow-[0_0_0_1px_rgba(217,128,50,0.45),0_0_30px_rgba(217,128,50,0.35)]"
+                        data-reveal="fade-up"
+                        :style="{ '--reveal-delay': '700ms' }"
                     >
                         <span>Download Resume</span>
                         <font-awesome-icon class="ml-2" icon="fas fa-download" />

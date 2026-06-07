@@ -25,14 +25,13 @@
                 <div class="text-center text-sm text-gray-300 space-y-1">
                     <p>&copy; 2025 Christian Mark Gonzales. All rights reserved.</p>
                     <p class="text-xs text-gray-500">
-                        Hero 3D laptop by
+                        Hero 3D desktop by
                         <a
-                            href="https://sketchfab.com/yakuphan"
+                            href="https://sketchfab.com/3d-models/gaming-desktop-pc-d1d8282c9916438091f11aeb28787b66"
                             class="hover:text-gray-300 transition-colors"
                             target="_blank"
                             rel="noopener noreferrer"
-                        >yakuphan</a>
-                        (CC BY-NC)
+                        >Yolala3D | Y3D</a>
                     </p>
                 </div>
 

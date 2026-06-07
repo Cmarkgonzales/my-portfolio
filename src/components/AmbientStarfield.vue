@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-    import { onMounted, onBeforeUnmount, ref } from 'vue';
+    import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
 
     const props = defineProps({
         density: {
@@ -19,6 +19,26 @@
             type: String,
             default: 'dark',
             validator: (value) => ['dark', 'light'].includes(value),
+        },
+        parallaxStrength: {
+            type: Number,
+            default: 44,
+        },
+        focusX: {
+            type: Number,
+            default: null,
+        },
+        focusY: {
+            type: Number,
+            default: null,
+        },
+        focusRadius: {
+            type: Number,
+            default: 0.34,
+        },
+        focusWeight: {
+            type: Number,
+            default: 0,
         },
     });
 
@@ -44,25 +64,51 @@
     let reducedMotion = false;
     let tick = 0;
 
-    let stars = [];
+    let particles = [];
+    let particleCanvasWidth = 0;
+    let particleCanvasHeight = 0;
     let parallaxX = 0;
     let parallaxY = 0;
     let targetParallaxX = 0;
     let targetParallaxY = 0;
 
-    const STAR_BASE_COUNT = 160;
+    const STAR_BASE_COUNT = 220;
+    const DUST_BASE_COUNT = 500;
 
-    const createStars = (width, height) => {
-        const palette = STAR_PALETTES[props.variant] ?? STAR_PALETTES.dark;
-        const count = Math.round(STAR_BASE_COUNT * props.density);
-        stars = Array.from({ length: count }, (_, index) => {
-            const depth = Math.random() * 0.65 + 0.2;
-            const tint = palette.tints[index % palette.tints.length];
+    const randomPosition = (width, height) => {
+        const useFocus = props.focusWeight > 0 && props.focusX !== null && props.focusY !== null;
+
+        if (!useFocus || Math.random() > props.focusWeight) {
             return {
                 x: Math.random() * width,
                 y: Math.random() * height,
+            };
+        }
+
+        const angle = Math.random() * Math.PI * 2;
+        const spread = Math.random() ** 0.55 * props.focusRadius;
+        return {
+            x: props.focusX * width + Math.cos(angle) * spread * width,
+            y: props.focusY * height + Math.sin(angle) * spread * height,
+        };
+    };
+
+    const createParticles = (width, height) => {
+        const palette = STAR_PALETTES[props.variant] ?? STAR_PALETTES.dark;
+        const starCount = Math.round(STAR_BASE_COUNT * props.density);
+        const dustCount = Math.round(DUST_BASE_COUNT * props.density);
+
+        const stars = Array.from({ length: starCount }, (_, index) => {
+            const depth = Math.random() * 0.55 + 0.18;
+            const tint = palette.tints[index % palette.tints.length];
+            const position = randomPosition(width, height);
+            return {
+                kind: 'star',
+                x: position.x,
+                y: position.y,
                 depth,
-                radius: Math.random() * 1.1 + 0.35,
+                parallaxBoost: 1,
+                radius: Math.random() * 1.25 + 0.4,
                 alpha: Math.random() * palette.alphaRange + palette.alphaMin,
                 vx: (Math.random() - 0.5) * 0.06,
                 vy: (Math.random() - 0.5) * 0.045,
@@ -70,6 +116,41 @@
                 tint,
             };
         });
+
+        const dust = Array.from({ length: dustCount }, (_, index) => {
+            const depth = Math.random() * 0.72 + 0.28;
+            const tint = palette.tints[(index + 1) % palette.tints.length];
+            const position = randomPosition(width, height);
+            return {
+                kind: 'dust',
+                x: position.x,
+                y: position.y,
+                depth,
+                parallaxBoost: 1.2 + Math.random() * 0.55,
+                radius: Math.random() * 0.55 + 0.14,
+                alpha: Math.random() * 0.28 + 0.08,
+                vx: (Math.random() - 0.5) * 0.028,
+                vy: (Math.random() - 0.5) * 0.022,
+                twinklePhase: Math.random() * Math.PI * 2,
+                tint,
+            };
+        });
+
+        particles = [...dust, ...stars];
+    };
+
+    const rebuildParticles = (width, height, force = false) => {
+        if (!width || !height) return;
+
+        const sizeChanged =
+            Math.abs(width - particleCanvasWidth) > 48 ||
+            Math.abs(height - particleCanvasHeight) > 48;
+
+        if (!force && particles.length > 0 && !sizeChanged) return;
+
+        particleCanvasWidth = width;
+        particleCanvasHeight = height;
+        createParticles(width, height);
     };
 
     const resize = () => {
@@ -90,9 +171,7 @@
         ctx = canvas.getContext('2d');
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        if (stars.length === 0) {
-            createStars(width, height);
-        }
+        rebuildParticles(width, height);
     };
 
     const onPointerMove = (event) => {
@@ -100,10 +179,9 @@
 
         const nx = (event.clientX / window.innerWidth - 0.5) * 2;
         const ny = (event.clientY / window.innerHeight - 0.5) * 2;
-        const strength = 36;
 
-        targetParallaxX = -nx * strength;
-        targetParallaxY = -ny * strength;
+        targetParallaxX = -nx * props.parallaxStrength;
+        targetParallaxY = -ny * props.parallaxStrength;
     };
 
     const onPointerLeave = () => {
@@ -124,27 +202,30 @@
         ctx.clearRect(0, 0, width, height);
         tick += 1;
 
-        for (const star of stars) {
+        for (const particle of particles) {
             if (!reducedMotion) {
-                star.x += star.vx;
-                star.y += star.vy;
+                particle.x += particle.vx;
+                particle.y += particle.vy;
 
-                if (star.x < -8) star.x = width + 8;
-                if (star.x > width + 8) star.x = -8;
-                if (star.y < -8) star.y = height + 8;
-                if (star.y > height + 8) star.y = -8;
+                if (particle.x < -8) particle.x = width + 8;
+                if (particle.x > width + 8) particle.x = -8;
+                if (particle.y < -8) particle.y = height + 8;
+                if (particle.y > height + 8) particle.y = -8;
             }
 
-            const x = star.x + parallaxX * star.depth;
-            const y = star.y + parallaxY * star.depth;
+            const depthShift = particle.depth * particle.parallaxBoost;
+            const x = particle.x + parallaxX * depthShift;
+            const y = particle.y + parallaxY * depthShift;
             const twinkle = reducedMotion
                 ? 1
-                : 0.72 + 0.28 * Math.sin(tick * 0.018 + star.twinklePhase);
+                : particle.kind === 'dust'
+                    ? 0.82 + 0.18 * Math.sin(tick * 0.012 + particle.twinklePhase)
+                    : 0.72 + 0.28 * Math.sin(tick * 0.018 + particle.twinklePhase);
 
-            ctx.globalAlpha = star.alpha * twinkle;
-            ctx.fillStyle = star.tint;
+            ctx.globalAlpha = particle.alpha * twinkle;
+            ctx.fillStyle = particle.tint;
             ctx.beginPath();
-            ctx.arc(x, y, star.radius, 0, Math.PI * 2);
+            ctx.arc(x, y, particle.radius, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -155,6 +236,15 @@
         draw();
         animationId = requestAnimationFrame(loop);
     };
+
+    watch(
+        () => [props.density, props.focusX, props.focusY, props.focusRadius, props.focusWeight],
+        () => {
+            const canvas = canvasRef.value;
+            if (!canvas?.clientWidth || !canvas?.clientHeight) return;
+            rebuildParticles(canvas.clientWidth, canvas.clientHeight, true);
+        },
+    );
 
     onMounted(() => {
         reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

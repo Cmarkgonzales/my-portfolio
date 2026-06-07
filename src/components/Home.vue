@@ -1,17 +1,24 @@
 <template>
     <section
         id="home"
-        class="relative isolate overflow-hidden pt-32 sm:pt-36 md:pt-40 pb-24 min-h-[95vh] flex items-center text-white"
+        class="relative isolate overflow-x-hidden pt-32 sm:pt-36 md:pt-40 pb-24 min-h-screen text-white"
     >
         <div class="hero-texture absolute inset-0 -z-10"></div>
         <div class="hero-radial absolute inset-0 -z-10"></div>
         <div class="hero-grid absolute inset-0 -z-10 opacity-45"></div>
-        <AmbientStarfield :density="1.15" />
+        <AmbientStarfield
+            :density="1.85"
+            :parallax-strength="58"
+            :focus-x="starfieldFocus.x"
+            :focus-y="starfieldFocus.y"
+            :focus-radius="0.38"
+            :focus-weight="0.62"
+        />
 
-        <div class="relative z-[1] isolate w-full">
+        <div class="relative z-10 isolate w-full">
         <div class="container mx-auto px-5 md:px-8 max-w-7xl xl:max-w-[84rem] 2xl:max-w-[92rem]">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-10 lg:gap-14 xl:gap-16">
-                <div class="w-full md:w-7/12 lg:w-5/12 xl:w-5/12 text-center md:text-left">
+            <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 lg:gap-12 xl:gap-14">
+                <div class="w-full md:w-5/12 lg:w-5/12 xl:w-5/12 text-center md:text-left pointer-events-auto shrink-0">
                     <span
                         class="hero-enter inline-flex items-center gap-2 px-4 py-2 rounded-full border border-ncs-blue/35 bg-white/5 text-sm font-medium mb-5 sm:mb-7 shadow-[0_0_22px_rgba(4,138,191,0.2)]"
                         style="animation-delay: 200ms"
@@ -55,7 +62,7 @@
                     >
                         <span
                             ref="magneticRef"
-                            class="inline-block"
+                            class="block w-full sm:inline-block sm:w-auto cursor-pointer"
                             @mouseenter="magnetic.onMouseEnter"
                             @mousemove="magnetic.onMouseMove"
                             @mouseleave="magnetic.onMouseLeave"
@@ -63,7 +70,7 @@
                             <Button
                                 variant="primary"
                                 size="lg"
-                                class="hero-cta-primary"
+                                class="hero-cta-primary w-full sm:w-auto"
                                 @click="scrollTo('#contact')"
                             >
                                 Let's Build Together
@@ -72,7 +79,7 @@
                         <Button
                             variant="secondary"
                             size="lg"
-                            class="hero-cta-secondary"
+                            class="hero-cta-secondary w-full sm:w-auto"
                             @click="scrollTo('#projects')"
                         >
                             View Projects
@@ -100,19 +107,17 @@
                 </div>
 
                 <div
-                    class="hero-enter w-full md:w-5/12 lg:w-7/12 xl:w-7/12 2xl:w-8/12 flex justify-center md:justify-end relative"
+                    class="hero-canvas-column hero-enter relative flex w-full md:w-7/12 lg:w-6/12 xl:w-6/12 items-center justify-center pointer-events-auto overflow-visible"
                     style="animation-delay: 550ms"
                 >
-                    <div
-                        ref="heroCanvasContainer"
-                        class="hero-canvas relative w-full aspect-square max-w-[24rem] sm:max-w-[28rem] md:max-w-[32rem] lg:max-w-full xl:max-w-[44rem] 2xl:max-w-[52rem] touch-none"
-                        aria-hidden="true"
+                    <HeroDesktopCanvas
+                        class="hero-canvas-panel relative z-[1] w-full max-w-[18rem] sm:max-w-[22rem] md:max-w-[26rem] lg:max-w-[30rem] xl:max-w-[34rem] 2xl:max-w-[38rem] aspect-square min-h-[14rem] sm:min-h-[18rem] md:min-h-[20rem] lg:min-h-[24rem]"
                     />
                 </div>
             </div>
 
             <div
-                class="hero-enter mt-14 sm:mt-16 flex justify-center md:justify-start gap-5"
+                class="hero-enter mt-14 sm:mt-16 flex justify-center md:justify-start gap-5 pointer-events-auto"
                 style="animation-delay: 820ms"
             >
                 <a
@@ -139,34 +144,39 @@
     import { useMagneticButton } from '@/composables/useMagneticButton';
     import { useCountUp } from '@/composables/useCountUp';
     import AmbientStarfield from '@/components/AmbientStarfield.vue';
-    import { initHeroScene, destroyScene } from '@/composables/useThreeScene';
+    import HeroDesktopCanvas from '@/components/canvas/HeroDesktopCanvas.vue';
 
     const introText = computed(() => constantsStore.homeSection.introText);
     const socialLinks = computed(() => constantsStore.socialLinks);
     const typedRole = ref('');
     const roleWords = [
-        'Full-Stack Developer',
-        'Vue 3 & Node.js Engineer',
-        'Firebase Specialist',
-        'UI/UX Enthusiast',
+        'Full Stack Developer',
+        'Web Developer',
+        'AI Automation Specialist',
     ];
 
     const magneticRef = ref(null);
     const magnetic = useMagneticButton(magneticRef);
 
     const statsStripRef = ref(null);
-    const { displayValue: yearsValue } = useCountUp(statsStripRef, { end: 3, suffix: '+ Years' });
-    const { displayValue: projectsValue } = useCountUp(statsStripRef, { end: 20, suffix: '+ Projects' });
-    const { displayValue: techValue } = useCountUp(statsStripRef, { end: 8, suffix: '+ Technologies' });
-
-    const heroCanvasContainer = ref(null);
-    let heroHandle = null;
+    const statsCountUpOptions = { immediate: true, delay: 850 };
+    const { displayValue: yearsValue } = useCountUp(statsStripRef, { end: 4, suffix: '+ Years', ...statsCountUpOptions });
+    const { displayValue: projectsValue } = useCountUp(statsStripRef, { end: 5, suffix: '+ Projects', ...statsCountUpOptions });
+    const { displayValue: techValue } = useCountUp(statsStripRef, { end: 12, suffix: '+ Technologies', ...statsCountUpOptions });
 
     let roleTimer = null;
     let roleIndex = 0;
     let characterIndex = 0;
     let deleting = false;
     let reducedMotion = false;
+    const starfieldFocus = ref({ x: 0.72, y: 0.38 });
+
+    const updateStarfieldFocus = () => {
+        const isMobile = window.innerWidth < 768;
+        starfieldFocus.value = isMobile
+            ? { x: 0.5, y: 0.64 }
+            : { x: 0.72, y: 0.38 };
+    };
 
     const scrollTo = (selector) => {
         const target = document.querySelector(selector);
@@ -211,20 +221,19 @@
 
     onMounted(() => {
         reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        updateStarfieldFocus();
+        window.addEventListener('resize', updateStarfieldFocus, { passive: true });
+
         if (reducedMotion) {
             typedRole.value = roleWords[0];
         } else {
             animateRole();
         }
-
-        if (heroCanvasContainer.value) {
-            heroHandle = initHeroScene(heroCanvasContainer.value);
-        }
     });
 
     onBeforeUnmount(() => {
         clearRoleTimer();
-        destroyScene(heroHandle);
+        window.removeEventListener('resize', updateStarfieldFocus);
     });
 </script>
 
@@ -245,8 +254,14 @@
     }
 
     .hero-radial {
-        background: radial-gradient(circle at 65% 34%, rgba(4, 138, 191, 0.3), transparent 40%);
-        filter: blur(10px);
+        background:
+            radial-gradient(circle at 72% 36%, rgba(4, 138, 191, 0.42), transparent 46%),
+            radial-gradient(circle at 68% 42%, rgba(217, 128, 50, 0.16), transparent 38%);
+        filter: blur(12px);
+    }
+
+    .hero-canvas-column {
+        isolation: isolate;
     }
 
     .hero-name {
@@ -254,31 +269,6 @@
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
-    }
-
-    .hero-canvas::after {
-        content: '';
-        position: absolute;
-        inset: -1px;
-        border-radius: 50%;
-        pointer-events: none;
-        background: radial-gradient(
-            circle at center,
-            transparent 68%,
-            rgba(5, 8, 15, 0.08) 82%,
-            rgba(5, 8, 15, 0.22) 94%,
-            rgba(5, 8, 15, 0.35) 100%
-        );
-        z-index: 1;
-    }
-
-    .hero-canvas :deep(canvas) {
-        display: block;
-        width: 100% !important;
-        height: 100% !important;
-        outline: none;
-        border: none;
-        background: transparent !important;
     }
 
     .hero-cta-primary {
@@ -295,5 +285,9 @@
 
     .hero-cta-secondary:hover {
         box-shadow: 0 0 0 1px rgba(4, 138, 191, 0.44), 0 0 30px rgba(4, 138, 191, 0.28);
+    }
+
+    .hero-canvas-panel {
+        filter: none;
     }
 </style>

@@ -58,23 +58,7 @@ const starfieldDensity = computed(() => {
   return 1;
 });
 
-const containerBackdropClass = computed(() => {
-  switch (props.bg) {
-    case 'surface':
-    case 'default':
-      return 'bg-surface-0';
-    case 'muted':
-      return 'bg-surface-1';
-    case 'dark':
-      return 'bg-surface-1';
-    case 'elevated':
-      return 'bg-surface-2';
-    case 'light':
-      return 'bg-light-cyan';
-    default:
-      return '';
-  }
-});
+const containerBackdropClass = computed(() => '');
 
 const backgroundClass = computed(() => {
   switch (props.bg) {

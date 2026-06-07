@@ -27,7 +27,7 @@
                 <div class="md:hidden z-50">
                     <button
                         type="button"
-                        class="text-text-primary text-2xl p-2 rounded-lg hover:bg-white/10 transition-colors"
+                        class="text-text-primary text-2xl p-2 rounded-lg cursor-pointer hover:bg-white/10 transition-colors"
                         @click="openMobileMenu"
                         aria-label="Open mobile menu"
                         :aria-expanded="mobileMenuVisible"
@@ -45,7 +45,7 @@
                         >
                             <button
                                 type="button"
-                                class="relative px-3 py-2 text-sm lg:text-base font-medium text-text-secondary transition-colors duration-300 hover:text-text-primary"
+                                class="relative px-3 py-2 text-sm lg:text-base font-medium cursor-pointer text-text-secondary transition-colors duration-300 hover:text-text-primary"
                                 :class="{ 'text-text-primary': activeLink === item.href }"
                                 @click="scrollToSection(item.href)"
                                 :aria-current="activeLink === item.href ? 'page' : undefined"
@@ -98,7 +98,7 @@
         >
             <button
                 type="button"
-                class="absolute top-4 right-4 text-2xl text-text-primary rounded-lg p-2 hover:bg-white/10 transition-colors"
+                class="absolute top-4 right-4 text-2xl text-text-primary rounded-lg p-2 cursor-pointer hover:bg-white/10 transition-colors"
                 @click="closeMobileMenu"
                 aria-label="Close mobile menu"
             >
@@ -113,7 +113,7 @@
                     <button
                         type="button"
                         :class="[
-                            'relative w-full text-left px-4 py-3 rounded-xl transition-all duration-300 ease-linear text-base border',
+                            'relative w-full text-left px-4 py-3 rounded-xl cursor-pointer transition-all duration-300 ease-linear text-base border',
                             activeLink === item.href
                                 ? 'bg-ncs-blue/20 border-ncs-blue/40 text-text-primary'
                                 : 'text-text-secondary border-transparent hover:bg-white/10 hover:text-text-primary'

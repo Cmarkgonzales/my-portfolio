@@ -1,5 +1,5 @@
 <template>
-    <Section id="contact" bg="dark" class="bg-gradient-to-br from-oxford-blue to-ocean-blue [&_.container]:bg-gradient-to-br [&_.container]:from-oxford-blue [&_.container]:to-ocean-blue">
+    <Section id="contact" bg="dark" class="bg-gradient-to-br from-oxford-blue to-ocean-blue">
             <SectionHeader
                 title="Contact"
                 subTitle="Get In Touch"

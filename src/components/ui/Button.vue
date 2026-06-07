@@ -1,10 +1,10 @@
 <template>
   <button
     :class="[
-      'inline-flex items-center justify-center font-medium transition-all duration-300 focus-ring active:scale-[0.99] disabled:active:scale-100',
+      'inline-flex items-center justify-center font-medium cursor-pointer disabled:cursor-not-allowed transition-all duration-300 focus-ring active:scale-[0.99] disabled:active:scale-100',
       variants[variant],
       sizes[size],
-      { 'opacity-50 cursor-not-allowed': disabled }
+      { 'opacity-50': disabled }
     ]"
     :disabled="disabled"
     @click="$emit('click')"

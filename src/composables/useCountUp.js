@@ -4,10 +4,17 @@ function easeOutExpo(t) {
     return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
 }
 
-export function useCountUp(targetRef, { end, duration = 1200, suffix = '' } = {}) {
+export function useCountUp(targetRef, {
+    end,
+    duration = 1200,
+    suffix = '',
+    immediate = false,
+    delay = 0,
+} = {}) {
     const displayValue = ref(`0${suffix}`);
     let animationId = null;
     let observer = null;
+    let startTimer = null;
     let hasAnimated = false;
 
     const animate = () => {
@@ -56,6 +63,13 @@ export function useCountUp(targetRef, { end, duration = 1200, suffix = '' } = {}
             return;
         }
 
+        if (immediate) {
+            startTimer = setTimeout(() => {
+                animate();
+            }, delay);
+            return;
+        }
+
         if (targetRef.value) {
             setupObserver(targetRef.value);
         }
@@ -64,7 +78,7 @@ export function useCountUp(targetRef, { end, duration = 1200, suffix = '' } = {}
     watch(
         () => targetRef.value,
         (el) => {
-            if (el && !hasAnimated) {
+            if (el && !hasAnimated && !immediate) {
                 setupObserver(el);
             }
         },
@@ -73,6 +87,9 @@ export function useCountUp(targetRef, { end, duration = 1200, suffix = '' } = {}
     onBeforeUnmount(() => {
         if (animationId !== null) {
             cancelAnimationFrame(animationId);
+        }
+        if (startTimer !== null) {
+            clearTimeout(startTimer);
         }
         observer?.disconnect();
     });

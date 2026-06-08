@@ -6,7 +6,7 @@
             subTitleColor="text-text-primary"
         />
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 mb-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10">
             <div
                 v-for="(skill, index) in mainSkills"
                 :key="`skill-${index}`"
@@ -41,11 +41,14 @@
             :style="{ '--reveal-delay': '180ms' }"
         >
             <h3 class="text-xl font-bold text-text-primary mb-6 text-center">Additional Skills</h3>
-            <div class="flex flex-wrap justify-center gap-3">
+            <div class="flex flex-wrap justify-center gap-3" role="list" aria-label="Additional skills">
                 <span
-                    v-for="tag in additionalSkills"
+                    v-for="(tag, index) in additionalSkills"
                     :key="`tag-${tag.name}`"
-                    class="inline-flex items-center rounded-full px-3.5 py-1.5 text-xs md:text-sm font-medium border border-border-subtle bg-white/6 text-text-secondary transition-all duration-300 hover:-translate-y-0.5 hover:border-ncs-blue/40 hover:text-text-primary"
+                    role="listitem"
+                    class="additional-skill-chip inline-flex items-center rounded-full px-3.5 py-1.5 text-xs md:text-sm font-medium border border-border-subtle bg-white/6 text-text-secondary"
+                    :class="{ 'additional-skill-chip--animated': !isReducedMotion }"
+                    :style="{ '--chip-delay': `${(index % 8) * 0.45}s` }"
                 >
                     {{ tag.name }}
                 </span>
@@ -60,10 +63,12 @@
     import SectionHeader from '@/generics/SectionHeader.vue';
     import Section from '@/components/ui/Section.vue';
     import SkillProficiencyBar from '@/components/SkillProficiencyBar.vue';
+    import { useMotion } from '@/composables/useMotion';
     import { resolveProficiency } from '@/utils/skillProficiency';
 
     const mainSkills = computed(() => constantsStore.mainSkills);
     const additionalSkills = computed(() => constantsStore.additionalSkills);
+    const { isReducedMotion } = useMotion();
 
     const barFillClass = (color) => {
         const map = {
@@ -76,3 +81,49 @@
         return map[color] ?? map['ncs-blue'];
     };
 </script>
+
+<style scoped>
+    .additional-skill-chip {
+        transition:
+            transform 0.3s ease,
+            border-color 0.3s ease,
+            color 0.3s ease,
+            box-shadow 0.3s ease,
+            background-color 0.3s ease;
+    }
+
+    .additional-skill-chip:hover {
+        transform: translateY(-2px);
+        border-color: rgba(4, 138, 191, 0.4);
+        color: var(--color-text-primary);
+        background-color: rgba(4, 138, 191, 0.1);
+        box-shadow:
+            0 0 0 1px rgba(4, 138, 191, 0.18),
+            0 6px 18px rgba(4, 138, 191, 0.1);
+    }
+
+    @keyframes skillChipDrift {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-3px);
+        }
+    }
+
+    .additional-skill-chip--animated {
+        animation: skillChipDrift 4.8s ease-in-out infinite;
+        animation-delay: var(--chip-delay, 0s);
+    }
+
+    .additional-skill-chip--animated:hover {
+        animation-play-state: paused;
+        transform: translateY(-3px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .additional-skill-chip--animated {
+            animation: none;
+        }
+    }
+</style>

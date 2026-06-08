@@ -1,4 +1,5 @@
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { useMotion } from '@/composables/useMotion';
 
 function easeOutExpo(t) {
     return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
@@ -56,10 +57,32 @@ export function useCountUp(targetRef, {
         observer.observe(el);
     };
 
+    const { isReducedMotion } = useMotion();
+
+    const skipAnimation = () => {
+        displayValue.value = `${end}${suffix}`;
+        hasAnimated = true;
+    };
+
+    watch(isReducedMotion, (reduced) => {
+        if (reduced) {
+            if (animationId !== null) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            if (startTimer !== null) {
+                clearTimeout(startTimer);
+                startTimer = null;
+            }
+            observer?.disconnect();
+            observer = null;
+            skipAnimation();
+        }
+    });
+
     onMounted(() => {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            displayValue.value = `${end}${suffix}`;
-            hasAnimated = true;
+        if (isReducedMotion.value) {
+            skipAnimation();
             return;
         }
 

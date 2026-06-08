@@ -1,5 +1,4 @@
-const prefersReducedMotion = () =>
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+import { useMotion } from '@/composables/useMotion';
 
 export function observeRevealTargets(container, options = {}) {
     const { threshold = 0.12, rootMargin = '0px 0px -8% 0px' } = options;
@@ -14,7 +13,9 @@ export function observeRevealTargets(container, options = {}) {
         return () => {};
     }
 
-    if (prefersReducedMotion()) {
+    const { isReducedMotion } = useMotion();
+
+    if (isReducedMotion.value) {
         targets.forEach((el) => el.classList.add('is-revealed'));
         return () => {};
     }

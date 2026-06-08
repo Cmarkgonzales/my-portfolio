@@ -1,15 +1,13 @@
-import { onBeforeUnmount } from 'vue';
-
-function prefersReducedMotion() {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+import { computed, onBeforeUnmount } from 'vue';
+import { useMotion } from '@/composables/useMotion';
 
 function isCoarsePointer() {
     return window.matchMedia('(pointer: coarse)').matches;
 }
 
 export function useMagneticButton(elRef, { strength = 0.35, maxOffset = 12 } = {}) {
-    const disabled = prefersReducedMotion() || isCoarsePointer();
+    const { isReducedMotion } = useMotion();
+    const disabled = computed(() => isReducedMotion.value || isCoarsePointer());
 
     const resetTransform = () => {
         const el = elRef.value;
@@ -18,7 +16,7 @@ export function useMagneticButton(elRef, { strength = 0.35, maxOffset = 12 } = {
     };
 
     const onMouseEnter = () => {
-        if (disabled) return;
+        if (disabled.value) return;
         const el = elRef.value;
         if (el) {
             el.style.transition = 'transform 0.15s ease-out';
@@ -26,7 +24,7 @@ export function useMagneticButton(elRef, { strength = 0.35, maxOffset = 12 } = {
     };
 
     const onMouseMove = (event) => {
-        if (disabled) return;
+        if (disabled.value) return;
 
         const el = elRef.value;
         if (!el) return;
@@ -43,7 +41,7 @@ export function useMagneticButton(elRef, { strength = 0.35, maxOffset = 12 } = {
     };
 
     const onMouseLeave = () => {
-        if (disabled) return;
+        if (disabled.value) return;
 
         const el = elRef.value;
         if (el) {

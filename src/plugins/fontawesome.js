@@ -6,7 +6,9 @@ import {
     faBars, faXmark, faDownload, faClock,
     faDesktop, faServer, faGear, faExternalLinkAlt,
     faEnvelope, faPhone, faMapMarkerAlt,
-    faSpinner, faArrowUp, faPaperPlane
+    faSpinner, faArrowUp, faPaperPlane,
+    faBookOpen, faCopy, faCheckCircle, faLink,
+    faChevronUp, faChevronDown
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
@@ -26,6 +28,12 @@ library.add(
     faMapMarkerAlt,
     faSpinner,
     faPaperPlane,
+    faBookOpen,
+    faCopy,
+    faCheckCircle,
+    faLink,
+    faChevronUp,
+    faChevronDown,
     faGithub,
     faLinkedin
 )

@@ -10,11 +10,12 @@
                 v-for="(project, index) in myProjects"
                 :key="project.name"
                 class="project-card group relative flex flex-col h-full rounded-xl overflow-hidden border border-border-subtle surface-glass"
+                :class="{ 'project-card--reduced-motion': isReducedMotion }"
                 data-category="web"
                 data-reveal="fade-up"
                 :style="{ '--reveal-delay': `${120 + index * 90}ms` }"
                 @mousemove="onCardMove($event)"
-                @mouseleave="onCardLeave($event)"
+                @mouseleave="onCardLeave"
             >
                 <div class="project-card-glow pointer-events-none absolute inset-0 rounded-xl z-[1]" aria-hidden="true" />
                 <div class="relative h-52 sm:h-56 overflow-hidden shrink-0">
@@ -24,6 +25,7 @@
                         :alt="project.name"
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-[#040c17]/85 via-[#040c17]/25 to-transparent" />
+
                     <Tag
                         variant="primary"
                         class="absolute top-3 left-3 capitalize whitespace-nowrap z-[2]"
@@ -51,7 +53,7 @@
                     <p class="text-text-secondary text-sm flex-grow leading-relaxed">
                         {{ project.description }}
                     </p>
-                    <div class="flex space-x-4 mt-6 border-t border-border-subtle pt-5">
+                    <div class="flex flex-wrap gap-3 mt-6 border-t border-border-subtle pt-5">
                         <a
                             v-if="isValidUrl(project.demoLink)"
                             :href="project.demoLink"
@@ -84,29 +86,26 @@
                 More projects to come soon. Stay tuned!
             </p>
         </div>
+
     </Section>
 </template>
 
 <script setup>
     import { computed } from 'vue';
     import { constantsStore } from '@/store';
+    import { useMotion } from '@/composables/useMotion';
+    import { isValidUrl } from '@/utils/url';
     import SectionHeader from '@/generics/SectionHeader.vue';
     import Section from '@/components/ui/Section.vue';
     import Tag from '@/components/ui/Tag.vue';
 
+    const { isReducedMotion } = useMotion();
+
     const myProjects = computed(() => constantsStore.projects);
 
-    const isValidUrl = (href) => {
-        if (!href || typeof href !== 'string') return false;
-        try {
-            const url = new URL(href);
-            return url.protocol === 'http:' || url.protocol === 'https:';
-        } catch {
-            return false;
-        }
-    };
-
     const onCardMove = (event) => {
+        if (isReducedMotion.value) return;
+
         const card = event.currentTarget;
         const rect = card.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -193,13 +192,11 @@
         );
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        .project-card {
-            transition: box-shadow 0.3s ease;
-        }
+    .project-card--reduced-motion {
+        transition: box-shadow 0.3s ease;
+    }
 
-        .project-card:hover {
-            transform: none !important;
-        }
+    .project-card--reduced-motion:hover {
+        transform: none !important;
     }
 </style>

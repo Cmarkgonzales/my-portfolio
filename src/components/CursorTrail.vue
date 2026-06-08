@@ -3,12 +3,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { useMotion } from '@/composables/useMotion';
+import { useCustomCursor } from '@/composables/useCustomCursor';
 
 const GLYPHS = ['{}', '//', '=>', '[]', 'const', '</>'];
 const DEFAULT_COLOR = '#07B2D9';
 const BRONZE_COLOR = '#D98032';
 const GLYPH_FONT = '600 11px "DM Mono", monospace';
+
+const {
+  cursorX,
+  cursorY,
+  isInteractive,
+  isTextHeavy,
+  isTracking,
+  resolveTargetState,
+} = useCustomCursor();
 
 const canvas = ref(null);
 const isEnabled = ref(false);
@@ -18,7 +29,9 @@ let animationFrameId = null;
 let queue = [];
 let running = false;
 const TRAIL_DELAY = 160;
+const TRAIL_DELAY_TEXT_HEAVY = 280;
 const MIN_QUEUE_DISTANCE = 20;
+const MIN_QUEUE_DISTANCE_TEXT_HEAVY = 38;
 const MIN_SPAWN_DISTANCE = 16;
 const CURSOR_OFFSET = 14;
 const MAX_QUEUE_LENGTH = 60;
@@ -77,20 +90,27 @@ const resizeCanvas = () => {
   }
 };
 
-const resolveTrailColor = (clientX, clientY) => {
-  const target = document.elementFromPoint(clientX, clientY);
-  const isInteractive = target?.closest('a, button, [role="button"]');
-  return isInteractive ? BRONZE_COLOR : DEFAULT_COLOR;
+const resolveTrailColor = (clientX, clientY, interactiveOverride) => {
+  if (interactiveOverride !== undefined) {
+    return interactiveOverride ? BRONZE_COLOR : DEFAULT_COLOR;
+  }
+  resolveTargetState(clientX, clientY);
+  return isInteractive.value ? BRONZE_COLOR : DEFAULT_COLOR;
 };
 
-const handleMouseMove = (e) => {
-  const x = e.clientX + CURSOR_OFFSET;
-  const y = e.clientY + CURSOR_OFFSET;
+const getQueueDistanceThreshold = () => (
+  isTextHeavy.value ? MIN_QUEUE_DISTANCE_TEXT_HEAVY : MIN_QUEUE_DISTANCE
+);
+
+const enqueueTrailPoint = (clientX, clientY, interactiveOverride) => {
+  const x = clientX + CURSOR_OFFSET;
+  const y = clientY + CURSOR_OFFSET;
+  const minDistance = getQueueDistanceThreshold();
 
   if (lastQueuedPos) {
     const dx = x - lastQueuedPos.x;
     const dy = y - lastQueuedPos.y;
-    if (dx * dx + dy * dy < MIN_QUEUE_DISTANCE * MIN_QUEUE_DISTANCE) {
+    if (dx * dx + dy * dy < minDistance * minDistance) {
       return;
     }
     lastMoveDx = dx;
@@ -98,12 +118,17 @@ const handleMouseMove = (e) => {
   }
 
   lastQueuedPos = { x, y };
-  const color = resolveTrailColor(e.clientX, e.clientY);
+  const color = resolveTrailColor(clientX, clientY, interactiveOverride);
   queue.push({ x, y, time: Date.now(), color, dirX: lastMoveDx, dirY: lastMoveDy });
 
   if (queue.length > MAX_QUEUE_LENGTH) {
     queue.splice(0, queue.length - MAX_QUEUE_LENGTH);
   }
+};
+
+const handleMouseMove = (e) => {
+  if (isTracking.value) return;
+  enqueueTrailPoint(e.clientX, e.clientY);
 };
 
 const stopAnimation = () => {
@@ -135,7 +160,9 @@ const animate = () => {
 
   const currentTime = Date.now();
 
-  while (queue.length > 0 && currentTime - queue[0].time >= TRAIL_DELAY) {
+  const trailDelay = isTextHeavy.value ? TRAIL_DELAY_TEXT_HEAVY : TRAIL_DELAY;
+
+  while (queue.length > 0 && currentTime - queue[0].time >= trailDelay) {
     const pos = queue.shift();
 
     if (lastSpawnPos) {
@@ -170,27 +197,27 @@ const animate = () => {
   animationFrameId = requestAnimationFrame(animate);
 };
 
-onMounted(() => {
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
-  if (prefersReducedMotion || coarsePointer) return;
+const { isReducedMotion } = useMotion();
+const coarsePointer = typeof window !== 'undefined'
+  ? window.matchMedia('(pointer: coarse)').matches
+  : false;
 
-  isEnabled.value = true;
+let listenersAttached = false;
 
-  requestAnimationFrame(() => {
-    if (!canvas.value) return;
-    ctx = canvas.value.getContext('2d');
-    resizeCanvas();
+const attachListeners = () => {
+  if (listenersAttached || !canvas.value) return;
+  listenersAttached = true;
+  ctx = canvas.value.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('mousemove', handleMouseMove);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+  startAnimation();
+};
 
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    startAnimation();
-  });
-});
-
-onUnmounted(() => {
+const detachListeners = () => {
+  if (!listenersAttached) return;
+  listenersAttached = false;
   stopAnimation();
   particles = [];
   queue = [];
@@ -198,9 +225,34 @@ onUnmounted(() => {
   lastSpawnPos = null;
   lastMoveDx = 0;
   lastMoveDy = -1;
-
   window.removeEventListener('resize', resizeCanvas);
   window.removeEventListener('mousemove', handleMouseMove);
   document.removeEventListener('visibilitychange', handleVisibilityChange);
+};
+
+const updateEnabledState = () => {
+  const shouldEnable = !isReducedMotion.value && !coarsePointer;
+  isEnabled.value = shouldEnable;
+
+  if (shouldEnable) {
+    requestAnimationFrame(() => attachListeners());
+  } else {
+    detachListeners();
+  }
+};
+
+watch(isReducedMotion, updateEnabledState);
+
+watch([cursorX, cursorY], ([x, y]) => {
+  if (!isTracking.value || !isEnabled.value) return;
+  enqueueTrailPoint(x, y, isInteractive.value);
+});
+
+onMounted(() => {
+  updateEnabledState();
+});
+
+onUnmounted(() => {
+  detachListeners();
 });
 </script>

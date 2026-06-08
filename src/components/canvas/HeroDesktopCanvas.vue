@@ -1,38 +1,68 @@
 <template>
     <div class="hero-tech-stage relative h-full w-full overflow-visible">
-        <div class="hero-sphere-anchor pointer-events-none absolute -inset-[10%] z-0" aria-hidden="true">
+        <div
+            class="hero-sphere-anchor pointer-events-none absolute -inset-[10%] z-0"
+            :class="{ 'hero-sphere-anchor--static': isReducedMotion }"
+            aria-hidden="true"
+        >
             <div class="hero-sphere-glow" />
             <HeroCanvasSparkles />
             <div class="hero-sphere-wash" />
         </div>
-        <CanvasLoader v-if="loading" :progress="progress" />
+        <CanvasLoader v-if="loading && !showPoster" :progress="progress" />
+        <img
+            v-if="showPoster"
+            :src="posterUrl"
+            alt="3D gaming desktop workstation illustration"
+            class="hero-poster pointer-events-none absolute inset-0 z-[2] h-full w-full object-contain"
+        />
         <div
+            v-show="!showPoster"
             ref="containerEl"
-            class="hero-canvas-viewport pointer-events-auto absolute inset-0 z-[2] touch-none"
+            class="hero-canvas-viewport pointer-events-auto absolute inset-0 z-[3] touch-none"
             aria-hidden="true"
         />
-        <HeroTechFloatLabels />
+        <HeroTechFloatLabels class="z-[4]" />
     </div>
 </template>
 
 <script setup>
     import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
     import { initHeroDesktopScene } from '@/composables/useHeroDesktopScene';
+    import { useMotion } from '@/composables/useMotion';
     import CanvasLoader from '@/components/canvas/CanvasLoader.vue';
     import HeroCanvasSparkles from '@/components/canvas/HeroCanvasSparkles.vue';
     import HeroTechFloatLabels from '@/components/canvas/HeroTechFloatLabels.vue';
 
+    const POSTER_URL = `${import.meta.env.BASE_URL}assets/hero-desktop-poster.webp`;
+
     const containerEl = ref(null);
     const loading = ref(true);
     const progress = ref(0);
+    const showPoster = ref(false);
+    const posterUrl = POSTER_URL;
     let sceneHandle = null;
 
+    const { isReducedMotion } = useMotion();
+
+    const shouldUsePoster = () => isReducedMotion.value;
+
+    const activatePoster = () => {
+        showPoster.value = true;
+        loading.value = false;
+    };
+
     onMounted(async () => {
+        if (shouldUsePoster()) {
+            activatePoster();
+            return;
+        }
+
         await nextTick();
-        requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
             if (!containerEl.value) return;
 
-            sceneHandle = initHeroDesktopScene(containerEl.value, {
+            sceneHandle = await initHeroDesktopScene(containerEl.value, {
                 onProgress: (value) => {
                     progress.value = value;
                 },
@@ -40,9 +70,16 @@
                     loading.value = false;
                 },
                 onError: () => {
-                    loading.value = false;
+                    activatePoster();
+                },
+                onSkip: () => {
+                    activatePoster();
                 },
             });
+
+            if (sceneHandle?.skipped) {
+                activatePoster();
+            }
         });
     });
 
@@ -58,6 +95,10 @@
         align-items: center;
         justify-content: center;
         animation: sphereBreathe 9s ease-in-out infinite;
+    }
+
+    .hero-sphere-anchor--static {
+        animation: none;
     }
 
     .hero-sphere-wash,
@@ -101,9 +142,13 @@
         background: transparent !important;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        .hero-sphere-anchor {
-            animation: none;
-        }
+    .hero-poster {
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        max-width: 100%;
+        max-height: 100%;
+        filter: drop-shadow(0 0 28px rgba(7, 178, 217, 0.18));
     }
 </style>

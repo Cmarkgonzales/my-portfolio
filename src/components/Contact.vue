@@ -26,12 +26,22 @@
                                         :icon="['fas', detail.icon]"
                                     />
                                 </div>
-                                <div>
+                                <div class="flex-grow min-w-0">
                                     <h4 class="text-lg font-medium mb-1">
                                         {{ detail.key }}
                                     </h4>
-                                    <p class="text-gray-300 break-words break-all">
+                                    <p class="text-gray-300 break-words">
                                         {{ detail.value }}
+                                        <button
+                                            v-if="isCopyable(detail)"
+                                            type="button"
+                                            class="contact-copy-btn ml-1.5 inline-flex align-middle focus-ring"
+                                            :aria-label="`Copy ${detail.key.toLowerCase()}`"
+                                            @click="copyContactValue(detail)"
+                                        >
+                                            <font-awesome-icon icon="fas fa-copy" />
+                                            <span class="sr-only">Copy {{ detail.key }}</span>
+                                        </button>
                                     </p>
                                 </div>
                             </div>
@@ -65,11 +75,40 @@
                         <h3 class="text-2xl font-semibold mb-6">
                             Send Me a Message
                         </h3>
+
+                        <div class="mb-6">
+                            <p class="text-sm text-gray-300 mb-3">I'm interested in:</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button
+                                    v-for="intent in intentOptions"
+                                    :key="intent.id"
+                                    type="button"
+                                    class="rounded-full px-3.5 py-1.5 text-xs font-medium border transition-colors focus-ring"
+                                    :class="selectedIntent === intent.id
+                                        ? 'border-sky-cyan bg-sky-cyan/20 text-sky-cyan'
+                                        : 'border-white/20 bg-white/5 text-gray-300 hover:border-white/40 hover:text-white'"
+                                    :aria-pressed="selectedIntent === intent.id"
+                                    @click="applyIntent(intent)"
+                                >
+                                    {{ intent.label }}
+                                </button>
+                            </div>
+                        </div>
+
                         <form
                             id="contact-form"
                             class="space-y-6"
                             @submit.prevent="handleSubmit"
                         >
+                            <div
+                                v-if="submitError"
+                                class="rounded-lg border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+                                role="alert"
+                                aria-live="assertive"
+                            >
+                                {{ submitError }}
+                            </div>
+
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <FormInput
                                     id="name"
@@ -111,22 +150,31 @@
                                 variant="primary"
                                 size="lg"
                                 class="w-full flex items-center justify-center cursor-pointer"
-                                :disabled="isSending"
+                                :disabled="isSending || submitSuccess"
+                                :class="{ 'contact-submit--success': submitSuccess && !isReducedMotion }"
                             >
-                                <template v-if="!isSending">
+                                <template v-if="submitSuccess">
+                                    <font-awesome-icon
+                                        class="mr-2"
+                                        :class="{ 'contact-check-pulse': !isReducedMotion }"
+                                        icon="fas fa-check-circle"
+                                    />
+                                    Message Sent!
+                                </template>
+                                <template v-else-if="!isSending">
                                     Send Message
                                     <font-awesome-icon class="ml-2" icon="fas fa-paper-plane" />
                                 </template>
                                 <template v-else>
                                     <font-awesome-icon class="mr-2 animate-spin" icon="fas fa-spinner" />
-                                    Sending...
+                                    Sending your message...
                                 </template>
                             </Button>
                         </form>
 
                         <Toast
-                            v-model:show="showModal"
-                            :message="modalMessage.content"
+                            v-model:show="showToast"
+                            :message="toastMessage"
                         />
                     </div>
                 </div>
@@ -135,15 +183,41 @@
 </template>
 
 <script setup>
-    import { reactive, ref, computed } from 'vue';
+    import { reactive, ref, computed, onMounted, watch } from 'vue';
     import emailjs from '@emailjs/browser';
     import { constantsStore } from '@/store';
+    import { useContactPrefill } from '@/composables/useContactPrefill';
+    import { useMotion } from '@/composables/useMotion';
     import SectionHeader from '@/generics/SectionHeader.vue';
     import FormInput from '@/generics/FormInput.vue';
     import FormTextArea from '@/generics/FormTextArea.vue';
     import Section from '@/components/ui/Section.vue';
     import Button from '@/components/ui/Button.vue';
     import Toast from '@/components/ui/Toast.vue';
+
+    const { pendingIntent, consumeIntent } = useContactPrefill();
+    const { isReducedMotion } = useMotion();
+
+    const intentOptions = [
+        {
+            id: 'collaboration',
+            label: 'Collaboration',
+            subject: 'Collaboration Opportunity',
+            message: "Hi Christian,\n\nI'm reaching out about a potential collaboration. ",
+        },
+        {
+            id: 'full-time',
+            label: 'Full-time',
+            subject: 'Full-time Role Inquiry',
+            message: "Hi Christian,\n\nI'm interested in discussing a full-time opportunity. ",
+        },
+        {
+            id: 'freelance',
+            label: 'Freelance',
+            subject: 'Freelance Project Inquiry',
+            message: "Hi Christian,\n\nI have a freelance project I'd like to discuss. ",
+        },
+    ];
 
     const formData = reactive({
         name: '',
@@ -154,14 +228,43 @@
 
     const errors = reactive({});
     const isSending = ref(false);
-    const showModal = ref(false);
-    const modalMessage = ref({
-        title: 'Message Sent',
-        content: 'Thank you! I’ll get back to you as soon as possible.'
-    });
+    const submitSuccess = ref(false);
+    const submitError = ref('');
+    const showToast = ref(false);
+    const toastMessage = ref('');
+    const selectedIntent = ref(null);
 
     const socialLinks = computed(() => constantsStore.socialLinks);
     const contactDetails = computed(() => constantsStore.contact);
+
+    const applyIntent = (intent) => {
+        selectedIntent.value = intent.id;
+        formData.subject = intent.subject;
+        formData.message = intent.message;
+        clearError('subject');
+        clearError('message');
+    };
+
+    const applyPrefillIntent = (intentId) => {
+        const intent = intentOptions.find((option) => option.id === intentId);
+        if (intent) {
+            applyIntent(intent);
+        }
+    };
+
+    onMounted(() => {
+        const pending = consumeIntent();
+        if (pending) {
+            applyPrefillIntent(pending);
+        }
+    });
+
+    watch(pendingIntent, (intent) => {
+        if (intent) {
+            applyPrefillIntent(intent);
+            consumeIntent();
+        }
+    });
 
     const validate = () => {
         Object.keys(errors).forEach(key => delete errors[key])
@@ -194,7 +297,26 @@
         delete errors[field]
     }
 
+    const COPYABLE_KEYS = new Set(['email', 'phone']);
+
+    const isCopyable = (detail) => COPYABLE_KEYS.has(detail.key.toLowerCase());
+
+    const copyContactValue = async (detail) => {
+        const label = detail.key.toLowerCase();
+        try {
+            await navigator.clipboard.writeText(detail.value);
+            toastMessage.value = `${detail.key} copied to clipboard.`;
+            showToast.value = true;
+        } catch {
+            toastMessage.value = `Unable to copy ${label}. Please copy it manually.`;
+            showToast.value = true;
+        }
+    };
+
     const handleSubmit = async () => {
+        submitError.value = '';
+        submitSuccess.value = false;
+
         if (!validate()) return
 
         isSending.value = true
@@ -203,18 +325,55 @@
             await emailjs.send(serviceID, templateID, { ...formData }, userID)
 
             Object.keys(formData).forEach(key => formData[key] = '')
-            modalMessage.value = {
-                title: 'Message Sent',
-                content: 'Thank you! I’ll get back to you as soon as possible.'
-            }
+            selectedIntent.value = null;
+            submitSuccess.value = true;
+
+            setTimeout(() => {
+                submitSuccess.value = false;
+            }, 4000);
         } catch (error) {
-            modalMessage.value = {
-                title: 'Error Sending Message',
-                content: 'There was an error sending your message. Please try again later.'
-            }
+            submitError.value = 'There was an error sending your message. Please try again later.';
         } finally {
             isSending.value = false
-            showModal.value = true
         }
     }
 </script>
+
+<style scoped>
+    .contact-copy-btn {
+        padding: 0.2rem;
+        border-radius: 0.25rem;
+        font-size: 0.65rem;
+        color: rgba(198, 217, 238, 0.45);
+        cursor: pointer;
+        transition: color 0.2s ease, background-color 0.2s ease;
+        vertical-align: middle;
+    }
+
+    .contact-copy-btn:hover {
+        color: #07b2d9;
+        background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .contact-check-pulse {
+        animation: contact-check-pulse 0.6s ease-out;
+    }
+
+    .contact-submit--success {
+        box-shadow: 0 0 0 1px rgba(7, 178, 217, 0.35), 0 0 24px rgba(7, 178, 217, 0.25);
+    }
+
+    @keyframes contact-check-pulse {
+        0% {
+            transform: scale(0.6);
+            opacity: 0.4;
+        }
+        60% {
+            transform: scale(1.15);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>

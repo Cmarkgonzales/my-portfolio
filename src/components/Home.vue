@@ -16,7 +16,7 @@
         />
 
         <div class="relative z-10 isolate w-full">
-        <div class="container mx-auto px-5 md:px-8 max-w-7xl xl:max-w-[84rem] 2xl:max-w-[92rem]">
+        <div class="site-container">
             <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 lg:gap-12 xl:gap-14">
                 <div class="w-full md:w-5/12 lg:w-5/12 xl:w-5/12 text-center md:text-left pointer-events-auto shrink-0">
                     <span
@@ -92,16 +92,16 @@
                         style="animation-delay: 740ms"
                     >
                         <div class="text-center md:text-left">
-                            <dt class="sr-only">Years of experience</dt>
                             <dd class="text-xl sm:text-2xl font-bold text-sky-cyan tabular-nums">{{ yearsValue }}</dd>
+                            <dt class="mt-1 text-xs text-text-secondary uppercase tracking-wide">Years of experience</dt>
                         </div>
                         <div class="text-center md:text-left">
-                            <dt class="sr-only">Projects completed</dt>
                             <dd class="text-xl sm:text-2xl font-bold text-sky-cyan tabular-nums">{{ projectsValue }}</dd>
+                            <dt class="mt-1 text-xs text-text-secondary uppercase tracking-wide">Projects completed</dt>
                         </div>
                         <div class="text-center md:text-left">
-                            <dt class="sr-only">Technologies mastered</dt>
                             <dd class="text-xl sm:text-2xl font-bold text-sky-cyan tabular-nums">{{ techValue }}</dd>
+                            <dt class="mt-1 text-xs text-text-secondary uppercase tracking-wide">Technologies mastered</dt>
                         </div>
                     </dl>
                 </div>
@@ -138,13 +138,16 @@
 </template>
 
 <script setup>
-    import { onMounted, onBeforeUnmount, computed, ref } from 'vue';
+    import { onMounted, onBeforeUnmount, computed, ref, watch, defineAsyncComponent } from 'vue';
     import { constantsStore } from '@/store';
     import Button from '@/components/ui/Button.vue';
     import { useMagneticButton } from '@/composables/useMagneticButton';
     import { useCountUp } from '@/composables/useCountUp';
+    import { useMotion } from '@/composables/useMotion';
     import AmbientStarfield from '@/components/AmbientStarfield.vue';
-    import HeroDesktopCanvas from '@/components/canvas/HeroDesktopCanvas.vue';
+    const HeroDesktopCanvas = defineAsyncComponent(() =>
+        import('@/components/canvas/HeroDesktopCanvas.vue'),
+    );
 
     const introText = computed(() => constantsStore.homeSection.introText);
     const socialLinks = computed(() => constantsStore.socialLinks);
@@ -160,15 +163,15 @@
 
     const statsStripRef = ref(null);
     const statsCountUpOptions = { immediate: true, delay: 850 };
-    const { displayValue: yearsValue } = useCountUp(statsStripRef, { end: 4, suffix: '+ Years', ...statsCountUpOptions });
-    const { displayValue: projectsValue } = useCountUp(statsStripRef, { end: 5, suffix: '+ Projects', ...statsCountUpOptions });
-    const { displayValue: techValue } = useCountUp(statsStripRef, { end: 12, suffix: '+ Technologies', ...statsCountUpOptions });
+    const { displayValue: yearsValue } = useCountUp(statsStripRef, { end: 4, suffix: '+', ...statsCountUpOptions });
+    const { displayValue: projectsValue } = useCountUp(statsStripRef, { end: 5, suffix: '+', ...statsCountUpOptions });
+    const { displayValue: techValue } = useCountUp(statsStripRef, { end: 12, suffix: '+', ...statsCountUpOptions });
 
     let roleTimer = null;
     let roleIndex = 0;
     let characterIndex = 0;
     let deleting = false;
-    let reducedMotion = false;
+    const { isReducedMotion } = useMotion();
     const starfieldFocus = ref({ x: 0.72, y: 0.38 });
 
     const updateStarfieldFocus = () => {
@@ -219,12 +222,29 @@
         roleTimer = setTimeout(animateRole, deleting ? 48 : 84);
     };
 
+    const startRoleAnimation = () => {
+        clearRoleTimer();
+        typedRole.value = '';
+        roleIndex = 0;
+        characterIndex = 0;
+        deleting = false;
+        animateRole();
+    };
+
+    watch(isReducedMotion, (reduced) => {
+        if (reduced) {
+            clearRoleTimer();
+            typedRole.value = roleWords[0];
+        } else {
+            startRoleAnimation();
+        }
+    });
+
     onMounted(() => {
-        reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         updateStarfieldFocus();
         window.addEventListener('resize', updateStarfieldFocus, { passive: true });
 
-        if (reducedMotion) {
+        if (isReducedMotion.value) {
             typedRole.value = roleWords[0];
         } else {
             animateRole();

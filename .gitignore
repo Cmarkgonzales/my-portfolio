@@ -25,3 +25,20 @@ dist-ssr
 
 .env
 .env.*
+
+# Dev-only asset tooling
+scripts/
+
+# Transient hero optimization workspaces
+.hero-original/
+.hero-optimize/
+
+# Draco decoder copied from three.js
+public/assets/draco/
+
+# Draco build-time / legacy files
+**/draco_encoder.js
+**/draco_decoder.js
+
+# Generated hero fallback poster
+public/assets/hero-desktop-poster.webp

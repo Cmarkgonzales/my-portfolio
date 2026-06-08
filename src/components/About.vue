@@ -45,22 +45,34 @@
                         {{ aboutMe.hobbies }}
                     </p>
 
-                    <ul
-                        class="grid grid-cols-1 md:grid-cols-2 gap-6"
+                    <div
+                        class="grid grid-cols-1 sm:grid-cols-2 gap-4"
                         data-reveal="zoom-in"
                         :style="{ '--reveal-delay': '600ms' }"
                     >
-                        <li
-                            v-for="(item, index) in aboutMe.personalInfo"
-                            :key="index"
-                            class="bg-white/6 border border-border-subtle p-4 rounded-lg backdrop-blur-sm"
+                        <article
+                            v-for="(highlight, index) in developerHighlights"
+                            :key="`highlight-${index}`"
+                            class="about-highlight surface-glass border border-border-subtle rounded-xl p-4 backdrop-blur-sm"
                         >
-                            <p class="text-text-secondary">
-                                <span class="font-semibold text-sky-cyan">{{ item.label }}:</span>
-                                {{ item.value }}
-                            </p>
-                        </li>
-                    </ul>
+                            <div class="flex items-start gap-3">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-ncs-blue/15 border border-ncs-blue/30">
+                                    <font-awesome-icon
+                                        class="text-sky-cyan text-sm"
+                                        :icon="['fas', highlight.icon]"
+                                    />
+                                </div>
+                                <div class="min-w-0">
+                                    <h4 class="text-sm font-semibold text-text-primary leading-snug">
+                                        {{ highlight.title }}
+                                    </h4>
+                                    <p class="mt-1 text-sm text-text-secondary leading-relaxed">
+                                        {{ highlight.description }}
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
                     <a
                         :href="resumeLink"
                         aria-label="Download"
@@ -84,4 +96,47 @@
 
     const aboutMe = computed(() => constantsStore.aboutMe);
     const resumeLink = computed(() => constantsStore.resumeLink);
+
+    const DEFAULT_HIGHLIGHTS = [
+        {
+            icon: 'desktop',
+            title: 'Full-stack delivery',
+            description: 'Ship cohesive features across APIs, data layers, and polished interfaces.',
+        },
+        {
+            icon: 'server',
+            title: 'Performance-first',
+            description: 'Optimize queries, payloads, and render paths before scaling infrastructure.',
+        },
+        {
+            icon: 'gear',
+            title: 'Maintainable systems',
+            description: 'Build clear architecture teams can extend with confidence over time.',
+        },
+        {
+            icon: 'paper-plane',
+            title: 'Collaborative shipping',
+            description: 'Partner with product and design to deliver on scope without cutting quality.',
+        },
+    ];
+
+    const developerHighlights = computed(() => {
+        const highlights = aboutMe.value.highlights;
+        if (Array.isArray(highlights) && highlights.length > 0) {
+            return highlights;
+        }
+        return DEFAULT_HIGHLIGHTS;
+    });
 </script>
+
+<style scoped>
+    .about-highlight {
+        transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .about-highlight:hover {
+        border-color: rgba(4, 138, 191, 0.35);
+        box-shadow: 0 0 0 1px rgba(4, 138, 191, 0.15), 0 8px 24px rgba(2, 10, 18, 0.35);
+        transform: translateY(-2px);
+    }
+</style>

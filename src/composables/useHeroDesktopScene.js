@@ -1,6 +1,4 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { useMotion } from '@/composables/useMotion';
 
 const MODEL_URL = `${import.meta.env.BASE_URL}assets/hero-desktop-pc/scene.gltf`;
 const MOBILE_QUERY = '(max-width: 500px)';
@@ -10,21 +8,19 @@ const IDLE_SWAY_AMPLITUDE = 0.28;
 const IDLE_SWAY_SPEED = 0.42;
 const RETURN_TO_FRONT_DURATION = 1.15;
 
-// Same viewing angle as the reference Computers.jsx camera [20, 3, 5] → origin.
-const CAMERA_VIEW_DIRECTION = new THREE.Vector3(20, 3, 5).normalize();
-const cameraOffset = new THREE.Vector3();
-const orbitOffset = new THREE.Vector3();
-const orbitSpherical = new THREE.Spherical();
+let CAMERA_VIEW_DIRECTION = null;
+const orbitSpherical = { radius: 0, phi: 0, theta: 0 };
 
-function prefersReducedMotion() {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function shouldSkipWebGL() {
+    const { isReducedMotion } = useMotion();
+    return isReducedMotion.value;
 }
 
 function easeOutCubic(t) {
     return 1 - (1 - t) ** 3;
 }
 
-function getDesktopTransform(isMobile) {
+function getDesktopTransform(THREE, isMobile) {
     return {
         scale: isMobile ? 0.62 : 0.68,
         position: new THREE.Vector3(0, isMobile ? -2.85 : -3, isMobile ? -1.8 : -1.35),
@@ -67,15 +63,15 @@ function prepareHeroDesktopModel(model) {
     });
 }
 
-function applyDesktopTransform(model, isMobile) {
-    const transform = getDesktopTransform(isMobile);
+function applyDesktopTransform(model, isMobile, THREE) {
+    const transform = getDesktopTransform(THREE, isMobile);
     model.scale.setScalar(transform.scale);
     model.position.copy(transform.position);
     model.rotation.copy(transform.rotation);
     return transform;
 }
 
-function getBoxCorners(box) {
+function getBoxCorners(box, THREE) {
     const { min, max } = box;
     return [
         new THREE.Vector3(min.x, min.y, min.z),
@@ -89,7 +85,7 @@ function getBoxCorners(box) {
     ];
 }
 
-function cornersFitViewport(corners, camera, margin = 0.04) {
+function cornersFitViewport(corners, camera, THREE, margin = 0.04) {
     const projected = new THREE.Vector3();
 
     return corners.every((corner) => {
@@ -105,11 +101,11 @@ function cornersFitViewport(corners, camera, margin = 0.04) {
     });
 }
 
-function fitDesktopInView(model, camera, controls, distanceMultiplier = 1) {
+function fitDesktopInView(model, camera, controls, THREE, distanceMultiplier = 1) {
     const box = new THREE.Box3().setFromObject(model);
     const center = box.getCenter(new THREE.Vector3());
     const sphere = box.getBoundingSphere(new THREE.Sphere());
-    const corners = getBoxCorners(box);
+    const corners = getBoxCorners(box, THREE);
 
     controls.target.copy(center);
 
@@ -124,7 +120,7 @@ function fitDesktopInView(model, camera, controls, distanceMultiplier = 1) {
         camera.lookAt(center);
         camera.updateProjectionMatrix();
 
-        if (cornersFitViewport(corners, camera)) {
+        if (cornersFitViewport(corners, camera, THREE)) {
             break;
         }
 
@@ -139,25 +135,52 @@ function fitDesktopInView(model, camera, controls, distanceMultiplier = 1) {
     return { center: center.clone(), distance };
 }
 
-function readCameraOrbit(camera, controls) {
-    orbitOffset.subVectors(camera.position, controls.target);
-    orbitSpherical.setFromVector3(orbitOffset);
+function readCameraOrbit(camera, controls, THREE) {
+    const offset = new THREE.Vector3().subVectors(camera.position, controls.target);
+    const spherical = new THREE.Spherical().setFromVector3(offset);
+    orbitSpherical.radius = spherical.radius;
+    orbitSpherical.phi = spherical.phi;
+    orbitSpherical.theta = spherical.theta;
     return orbitSpherical;
 }
 
-function setCameraOrbit(camera, controls, spherical) {
-    orbitOffset.setFromSpherical(spherical);
-    camera.position.copy(controls.target).add(orbitOffset);
+function setCameraOrbit(camera, controls, spherical, THREE) {
+    const offset = new THREE.Vector3().setFromSpherical(
+        new THREE.Spherical(spherical.radius, spherical.phi, spherical.theta),
+    );
+    camera.position.copy(controls.target).add(offset);
 }
 
 /**
  * Vue/raw-Three.js port of project_3D_developer_portfolio ComputersCanvas + Computers.
  */
-export function initHeroDesktopScene(containerEl, callbacks = {}) {
+export async function initHeroDesktopScene(containerEl, callbacks = {}) {
     if (!containerEl) return null;
 
+    if (shouldSkipWebGL()) {
+        callbacks.onSkip?.();
+        return { dispose: () => {}, render: () => {}, skipped: true };
+    }
+
+    const DRACO_DECODER_PATH = `${import.meta.env.BASE_URL}assets/draco/gltf/`;
+
+    const [
+        THREE,
+        { GLTFLoader },
+        { DRACOLoader },
+        { OrbitControls },
+    ] = await Promise.all([
+        import('three'),
+        import('three/addons/loaders/GLTFLoader.js'),
+        import('three/addons/loaders/DRACOLoader.js'),
+        import('three/addons/controls/OrbitControls.js'),
+    ]);
+
+    CAMERA_VIEW_DIRECTION = new THREE.Vector3(20, 3, 5).normalize();
+
     const { onProgress, onLoad, onError } = callbacks;
-    const reducedMotion = prefersReducedMotion();
+    const { isReducedMotion } = useMotion();
+    const reducedMotion = isReducedMotion.value;
     const clock = new THREE.Clock();
 
     const renderer = new THREE.WebGLRenderer({
@@ -220,7 +243,7 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
     let cameraFit = null;
 
     const captureFrontAzimuth = () => {
-        frontAzimuth = readCameraOrbit(camera, controls).theta;
+        frontAzimuth = readCameraOrbit(camera, controls, THREE).theta;
     };
 
     const getFrontSwayTheta = (elapsed) => (
@@ -241,7 +264,7 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         renderer.domElement.style.cursor = 'grab';
         if (!reducedMotion) {
             idleResumeTimer = setTimeout(() => {
-                returnStartTheta = readCameraOrbit(camera, controls).theta;
+                returnStartTheta = readCameraOrbit(camera, controls, THREE).theta;
                 returnElapsed = 0;
                 returningToFront = true;
                 idleResumeTimer = null;
@@ -267,7 +290,7 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
             return;
         }
 
-        const spherical = readCameraOrbit(camera, controls);
+        const spherical = readCameraOrbit(camera, controls, THREE);
         const swayTheta = getFrontSwayTheta(elapsed);
 
         if (returningToFront) {
@@ -282,7 +305,7 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
             spherical.theta = swayTheta;
         }
 
-        setCameraOrbit(camera, controls, spherical);
+        setCameraOrbit(camera, controls, spherical, THREE);
     };
 
     const updateEntrance = (delta) => {
@@ -306,7 +329,7 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         if (cameraFit) {
             const zoomedDistance = THREE.MathUtils.lerp(cameraFit.distance * 1.1, cameraFit.distance, eased);
             camera.position.copy(cameraFit.center).add(
-                cameraOffset.copy(CAMERA_VIEW_DIRECTION).multiplyScalar(zoomedDistance),
+                new THREE.Vector3().copy(CAMERA_VIEW_DIRECTION).multiplyScalar(zoomedDistance),
             );
             camera.lookAt(cameraFit.center);
             controls.update();
@@ -334,7 +357,7 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         camera.updateProjectionMatrix();
 
         if (desktopModel && entranceComplete) {
-            cameraFit = fitDesktopInView(desktopModel, camera, controls);
+            cameraFit = fitDesktopInView(desktopModel, camera, controls, THREE);
             captureFrontAzimuth();
         }
 
@@ -353,7 +376,11 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         }
     });
 
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath(DRACO_DECODER_PATH);
+
     const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
     loader.setResourcePath(MODEL_URL.slice(0, MODEL_URL.lastIndexOf('/') + 1));
 
     loader.load(
@@ -361,16 +388,16 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         (gltf) => {
             desktopModel = gltf.scene;
             prepareHeroDesktopModel(desktopModel);
-            targetTransform = applyDesktopTransform(desktopModel, isMobile);
+            targetTransform = applyDesktopTransform(desktopModel, isMobile, THREE);
             scene.add(desktopModel);
 
             if (reducedMotion) {
-                cameraFit = fitDesktopInView(desktopModel, camera, controls);
+                cameraFit = fitDesktopInView(desktopModel, camera, controls, THREE);
                 captureFrontAzimuth();
             } else {
                 desktopModel.scale.setScalar(targetTransform.scale * 0.84);
                 desktopModel.position.y = targetTransform.position.y + 0.28;
-                cameraFit = fitDesktopInView(desktopModel, camera, controls, 1.1);
+                cameraFit = fitDesktopInView(desktopModel, camera, controls, THREE, 1.1);
                 entranceElapsed = 0;
                 entranceComplete = false;
             }
@@ -393,8 +420,8 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         isMobile = event.matches;
         if (!desktopModel) return;
 
-        targetTransform = applyDesktopTransform(desktopModel, isMobile);
-        cameraFit = fitDesktopInView(desktopModel, camera, controls);
+        targetTransform = applyDesktopTransform(desktopModel, isMobile, THREE);
+        cameraFit = fitDesktopInView(desktopModel, camera, controls, THREE);
         captureFrontAzimuth();
         render();
     };
@@ -439,6 +466,7 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         mediaQuery.removeEventListener('change', handleMobileChange);
         document.removeEventListener('visibilitychange', onVisibilityChange);
         resizeObserver.disconnect();
+        dracoLoader.dispose();
         controls.dispose();
 
         if (desktopModel) {
@@ -453,5 +481,5 @@ export function initHeroDesktopScene(containerEl, callbacks = {}) {
         }
     };
 
-    return { dispose, render };
+    return { dispose, render, skipped: false };
 }

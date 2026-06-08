@@ -9,6 +9,7 @@
 
 <script setup>
     import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
+    import { useMotion } from '@/composables/useMotion';
 
     const props = defineProps({
         density: {
@@ -61,7 +62,7 @@
     let resizeObserver = null;
     let visibilityObserver = null;
     let isVisible = true;
-    let reducedMotion = false;
+    const { isReducedMotion } = useMotion();
     let tick = 0;
 
     let particles = [];
@@ -175,7 +176,7 @@
     };
 
     const onPointerMove = (event) => {
-        if (reducedMotion) return;
+        if (isReducedMotion.value) return;
 
         const nx = (event.clientX / window.innerWidth - 0.5) * 2;
         const ny = (event.clientY / window.innerHeight - 0.5) * 2;
@@ -203,7 +204,7 @@
         tick += 1;
 
         for (const particle of particles) {
-            if (!reducedMotion) {
+            if (!isReducedMotion.value) {
                 particle.x += particle.vx;
                 particle.y += particle.vy;
 
@@ -216,7 +217,7 @@
             const depthShift = particle.depth * particle.parallaxBoost;
             const x = particle.x + parallaxX * depthShift;
             const y = particle.y + parallaxY * depthShift;
-            const twinkle = reducedMotion
+            const twinkle = isReducedMotion.value
                 ? 1
                 : particle.kind === 'dust'
                     ? 0.82 + 0.18 * Math.sin(tick * 0.012 + particle.twinklePhase)
@@ -247,7 +248,6 @@
     );
 
     onMounted(() => {
-        reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         resize();
 
         const layer = canvasRef.value?.parentElement;
@@ -268,9 +268,21 @@
         window.addEventListener('pointermove', onPointerMove, { passive: true });
         window.addEventListener('pointerleave', onPointerLeave);
 
-        if (reducedMotion) {
+        if (isReducedMotion.value) {
             draw();
         } else {
+            animationId = requestAnimationFrame(loop);
+        }
+    });
+
+    watch(isReducedMotion, (reduced) => {
+        if (reduced) {
+            if (animationId !== null) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            draw();
+        } else if (animationId === null) {
             animationId = requestAnimationFrame(loop);
         }
     });

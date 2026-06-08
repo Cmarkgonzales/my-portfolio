@@ -7,6 +7,10 @@
             Skip to main content
         </a>
         <CursorTrail />
+        <KonamiBurstOverlay
+            :active="burstActive"
+            @complete="dismissBurst"
+        />
         <div v-if="isLoading" class="flex items-center justify-center h-screen bg-oxford-blue">
             <LoadingScreen />
         </div>
@@ -32,6 +36,8 @@
 
     import LoadingScreen from './components/LoadingScreen.vue';
     import CursorTrail from './components/CursorTrail.vue';
+    import KonamiBurstOverlay from './components/KonamiBurstOverlay.vue';
+    import { useKonamiCode } from '@/composables/useKonamiCode';
     import NavBar from '@/components/NavBar.vue';
     import Home from '@/components/Home.vue';
     import About from '@/components/About.vue';
@@ -42,6 +48,7 @@
     import Footer from '@/components/Footer.vue';
 
     const { fetchConstants, isLoading, error } = useFirebaseConstants();
+    const { burstActive, dismissBurst } = useKonamiCode();
 
     onMounted(async () => {
         await fetchConstants();

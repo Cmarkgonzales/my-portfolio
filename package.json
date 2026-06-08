@@ -6,8 +6,11 @@
   "homepage": "https://cmarkgonzales.github.io/my-portfolio/",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run sync:draco && vite build",
     "preview": "vite preview",
+    "optimize:hero": "bash scripts/optimize-hero.sh",
+    "sync:draco": "mkdir -p public/assets/draco/gltf && cp node_modules/three/examples/jsm/libs/draco/gltf/draco_wasm_wrapper.js node_modules/three/examples/jsm/libs/draco/gltf/draco_decoder.wasm public/assets/draco/gltf/ && rm -f public/assets/draco/gltf/draco_encoder.js public/assets/draco/gltf/draco_decoder.js",
+    "postinstall": "npm run sync:draco",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },

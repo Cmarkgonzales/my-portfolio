@@ -7,7 +7,8 @@
 </template>
 
 <script setup>
-    import { onBeforeUnmount, onMounted, ref } from 'vue';
+    import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+    import { useMotion } from '@/composables/useMotion';
 
     const SPARKLE_COUNT = 180;
 
@@ -17,7 +18,7 @@
     let resizeObserver = null;
     let particles = [];
     let tick = 0;
-    let reducedMotion = false;
+    const { isReducedMotion } = useMotion();
 
     const TINTS = ['#d9f5ff', '#8ec8e8', '#07b2d9', '#f2b672', '#ffffff'];
 
@@ -70,7 +71,7 @@
         tick += 1;
 
         for (const particle of particles) {
-            if (!reducedMotion) {
+            if (!isReducedMotion.value) {
                 particle.x += particle.vx;
                 particle.y += particle.vy;
 
@@ -86,7 +87,7 @@
             const edgeFade = 1 - Math.min(dist / maxDist, 1) ** 1.35;
             if (edgeFade <= 0.02) continue;
 
-            const twinkle = reducedMotion
+            const twinkle = isReducedMotion.value
                 ? 1
                 : 0.68 + 0.32 * Math.sin(tick * 0.016 + particle.twinklePhase + particle.depth * 2);
 
@@ -106,7 +107,6 @@
     };
 
     onMounted(() => {
-        reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         resize();
 
         const canvas = canvasRef.value;
@@ -116,9 +116,21 @@
             resizeObserver.observe(observeTarget);
         }
 
-        if (reducedMotion) {
+        if (isReducedMotion.value) {
             draw();
         } else {
+            animationId = requestAnimationFrame(loop);
+        }
+    });
+
+    watch(isReducedMotion, (reduced) => {
+        if (reduced) {
+            if (animationId !== null) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+            draw();
+        } else if (animationId === null) {
             animationId = requestAnimationFrame(loop);
         }
     });

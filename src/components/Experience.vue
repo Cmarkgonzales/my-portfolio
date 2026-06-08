@@ -1,8 +1,9 @@
 <template>
-    <Section id="experience" bg="light">
+    <Section id="experience" bg="muted">
             <SectionHeader
                 title="My Journey"
                 subTitle="Work Experience"
+                subTitleColor="text-text-primary"
             />
             <div class="relative max-w-5xl mx-auto">
                 <div class="hidden md:block absolute left-1/2 transform -translate-x-1/2 h-full timeline-line"></div>

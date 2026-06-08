@@ -6,7 +6,7 @@
       :variant="starfieldVariant"
     />
     <div ref="contentRef" class="section-content-layer relative z-[1]">
-      <div class="container mx-auto px-4 md:px-8 max-w-7xl" :class="containerBackdropClass">
+      <div class="site-container" :class="containerBackdropClass">
         <slot />
       </div>
     </div>

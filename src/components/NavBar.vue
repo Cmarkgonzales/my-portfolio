@@ -1,8 +1,9 @@
 <template>
     <header class="fixed top-0 left-0 w-full z-40">
+        <div class="site-container mt-3 md:mt-4">
         <nav
             :class="[
-                'mx-auto mt-3 md:mt-4 w-[calc(100%-1rem)] md:w-[calc(100%-2rem)] max-w-7xl rounded-2xl border px-4 md:px-6 transition-all duration-300',
+                'w-full rounded-2xl border px-4 md:px-8 transition-all duration-300',
                 isScrolled
                     ? 'surface-glass border-border-strong shadow-soft-dark py-2.5 md:py-3'
                     : 'surface-glass border-border-subtle py-3.5 md:py-4'
@@ -74,6 +75,7 @@
                 </div>
             </div>
         </nav>
+        </div>
 
         <div
             :class="[

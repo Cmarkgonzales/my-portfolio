@@ -4,6 +4,7 @@
             v-for="(label, index) in scatteredLabels"
             :key="label.text"
             class="hero-tech-float"
+            :class="{ 'hero-tech-float--static': isReducedMotion }"
             :style="labelStyle(label, index)"
         >
             {{ label.text }}
@@ -13,6 +14,9 @@
 
 <script setup>
     import { onMounted, ref } from 'vue';
+    import { useMotion } from '@/composables/useMotion';
+
+    const { isReducedMotion } = useMotion();
 
     const TECH_DEFS = [
         { text: 'Vue 3', color: '#42b883' },
@@ -68,6 +72,8 @@
 <style scoped>
     .hero-tech-float {
         position: absolute;
+        pointer-events: none;
+        transform: translate(-50%, -50%);
         white-space: nowrap;
         padding: 0.38rem 0.82rem;
         border-radius: 9999px;
@@ -107,10 +113,8 @@
         }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        .hero-tech-float {
-            animation: none;
-            transform: translate(-50%, -50%);
-        }
+    .hero-tech-float--static {
+        animation: none;
+        transform: translate(-50%, -50%);
     }
 </style>

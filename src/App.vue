@@ -26,6 +26,7 @@
                 <Contact />
             </main>
             <Footer />
+            <FloatingTerminal />
         </template>
     </div>
 </template>
@@ -46,6 +47,7 @@
     import Projects from '@/components/Projects.vue';
     import Contact from './components/Contact.vue';
     import Footer from '@/components/Footer.vue';
+    import FloatingTerminal from '@/components/FloatingTerminal.vue';
 
     const { fetchConstants, isLoading, error } = useFirebaseConstants();
     const { burstActive, dismissBurst } = useKonamiCode();

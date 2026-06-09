@@ -19,32 +19,22 @@
         <div class="site-container">
             <div class="flex flex-col md:flex-row items-center md:items-start justify-between gap-10 lg:gap-12 xl:gap-14">
                 <div class="w-full md:w-5/12 lg:w-5/12 xl:w-5/12 text-center md:text-left pointer-events-auto shrink-0">
-                    <span
-                        class="hero-enter inline-flex items-center gap-2 px-4 py-2 rounded-full border border-ncs-blue/35 bg-white/5 text-sm font-medium mb-5 sm:mb-7 shadow-[0_0_22px_rgba(4,138,191,0.2)]"
-                        style="animation-delay: 200ms"
-                    >
-                        <span class="relative flex h-2.5 w-2.5">
-                            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/80"></span>
-                            <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
-                        </span>
-                        Available for work
-                    </span>
                     <p
                         class="hero-enter uppercase tracking-[0.2em] text-xs sm:text-sm text-sky-cyan mb-3"
-                        style="animation-delay: 350ms"
+                        style="animation-delay: 200ms"
                     >
                         Christian Mark Gonzales
                     </p>
                     <h1
                         class="hero-enter text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-[1.08]"
-                        style="animation-delay: 450ms"
+                        style="animation-delay: 300ms"
                     >
                         Building robust digital
                         <span class="hero-name block">experiences</span>
                     </h1>
                     <div
                         class="hero-enter text-base sm:text-lg lg:text-xl text-gray-200 mb-5 sm:mb-7 min-h-[2.25rem] flex justify-center md:justify-start items-center"
-                        style="animation-delay: 520ms"
+                        style="animation-delay: 400ms"
                     >
                         <span class="mr-2 text-text-secondary">I am a</span>
                         <span class="text-chinese-bronze font-semibold">{{ typedRole }}</span>
@@ -52,13 +42,13 @@
                     </div>
                     <p
                         class="hero-enter text-base sm:text-lg lg:text-xl text-gray-200 leading-relaxed mb-8 sm:mb-10 max-w-2xl mx-auto md:mx-0"
-                        style="animation-delay: 620ms"
+                        style="animation-delay: 500ms"
                     >
                         {{ introText }}
                     </p>
                     <div
                         class="hero-enter flex flex-col sm:flex-row sm:justify-start gap-4"
-                        style="animation-delay: 680ms"
+                        style="animation-delay: 560ms"
                     >
                         <span
                             ref="magneticRef"
@@ -85,25 +75,6 @@
                             View Projects
                         </Button>
                     </div>
-
-                    <dl
-                        ref="statsStripRef"
-                        class="hero-enter mt-8 sm:mt-10 flex flex-wrap justify-center md:justify-start gap-x-8 gap-y-4"
-                        style="animation-delay: 740ms"
-                    >
-                        <div class="text-center md:text-left">
-                            <dd class="text-xl sm:text-2xl font-bold text-sky-cyan tabular-nums">{{ yearsValue }}</dd>
-                            <dt class="mt-1 text-xs text-text-secondary uppercase tracking-wide">Years of experience</dt>
-                        </div>
-                        <div class="text-center md:text-left">
-                            <dd class="text-xl sm:text-2xl font-bold text-sky-cyan tabular-nums">{{ projectsValue }}</dd>
-                            <dt class="mt-1 text-xs text-text-secondary uppercase tracking-wide">Projects completed</dt>
-                        </div>
-                        <div class="text-center md:text-left">
-                            <dd class="text-xl sm:text-2xl font-bold text-sky-cyan tabular-nums">{{ techValue }}</dd>
-                            <dt class="mt-1 text-xs text-text-secondary uppercase tracking-wide">Technologies mastered</dt>
-                        </div>
-                    </dl>
                 </div>
 
                 <div
@@ -118,7 +89,7 @@
 
             <div
                 class="hero-enter mt-14 sm:mt-16 flex justify-center md:justify-start gap-5 pointer-events-auto"
-                style="animation-delay: 820ms"
+                style="animation-delay: 700ms"
             >
                 <a
                     v-for="link in socialLinks"
@@ -142,7 +113,6 @@
     import { constantsStore } from '@/store';
     import Button from '@/components/ui/Button.vue';
     import { useMagneticButton } from '@/composables/useMagneticButton';
-    import { useCountUp } from '@/composables/useCountUp';
     import { useMotion } from '@/composables/useMotion';
     import AmbientStarfield from '@/components/AmbientStarfield.vue';
     const HeroDesktopCanvas = defineAsyncComponent(() =>
@@ -160,12 +130,6 @@
 
     const magneticRef = ref(null);
     const magnetic = useMagneticButton(magneticRef);
-
-    const statsStripRef = ref(null);
-    const statsCountUpOptions = { immediate: true, delay: 850 };
-    const { displayValue: yearsValue } = useCountUp(statsStripRef, { end: 4, suffix: '+', ...statsCountUpOptions });
-    const { displayValue: projectsValue } = useCountUp(statsStripRef, { end: 5, suffix: '+', ...statsCountUpOptions });
-    const { displayValue: techValue } = useCountUp(statsStripRef, { end: 12, suffix: '+', ...statsCountUpOptions });
 
     let roleTimer = null;
     let roleIndex = 0;

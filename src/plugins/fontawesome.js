@@ -8,7 +8,8 @@ import {
     faEnvelope, faPhone, faMapMarkerAlt,
     faSpinner, faArrowUp, faPaperPlane,
     faBookOpen, faCopy, faCheckCircle, faLink,
-    faChevronUp, faChevronDown
+    faChevronUp, faChevronDown,
+    faTerminal, faGripVertical,
 } from '@fortawesome/free-solid-svg-icons'
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
@@ -34,6 +35,8 @@ library.add(
     faLink,
     faChevronUp,
     faChevronDown,
+    faTerminal,
+    faGripVertical,
     faGithub,
     faLinkedin
 )

@@ -102,11 +102,19 @@
                         >
                             <div
                                 v-if="submitError"
-                                class="rounded-lg border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+                                class="rounded-lg border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-200 space-y-2"
                                 role="alert"
                                 aria-live="assertive"
                             >
-                                {{ submitError }}
+                                <p>{{ submitError }}</p>
+                                <a
+                                    v-if="contactEmail"
+                                    :href="mailtoFallbackHref"
+                                    class="inline-flex items-center gap-2 text-sky-cyan hover:text-white transition-colors underline underline-offset-2"
+                                >
+                                    <font-awesome-icon icon="fas fa-envelope" />
+                                    Email me directly at {{ contactEmail }}
+                                </a>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -237,6 +245,28 @@
     const socialLinks = computed(() => constantsStore.socialLinks);
     const contactDetails = computed(() => constantsStore.contact);
 
+    const contactEmail = computed(() => {
+        const infos = contactDetails.value?.infos ?? [];
+        const emailInfo = infos.find((info) => info.key?.toLowerCase() === 'email');
+        return emailInfo?.value?.trim() ?? '';
+    });
+
+    const mailtoFallbackHref = computed(() => {
+        const params = new URLSearchParams();
+        if (formData.subject.trim()) params.set('subject', formData.subject.trim());
+        if (formData.name.trim() || formData.message.trim()) {
+            const body = [
+                formData.name.trim() ? `Name: ${formData.name.trim()}` : '',
+                formData.email.trim() ? `Email: ${formData.email.trim()}` : '',
+                '',
+                formData.message.trim(),
+            ].filter(Boolean).join('\n');
+            params.set('body', body);
+        }
+        const query = params.toString();
+        return query ? `mailto:${contactEmail.value}?${query}` : `mailto:${contactEmail.value}`;
+    });
+
     const applyIntent = (intent) => {
         selectedIntent.value = intent.id;
         formData.subject = intent.subject;
@@ -313,18 +343,68 @@
         }
     };
 
+    const resolveEmailCredentials = () => {
+        const credentials = contactDetails.value?.emailCredentials ?? {};
+        const serviceID = credentials.serviceID?.trim();
+        const templateID = credentials.templateID?.trim();
+        const publicKey = credentials.userID?.trim() || credentials.publicKey?.trim();
+
+        if (!serviceID || !templateID || !publicKey) {
+            throw new Error('Email service is not configured.');
+        }
+
+        return { serviceID, templateID, publicKey };
+    };
+
+    const buildTemplateParams = () => ({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        subject: formData.subject.trim(),
+        message: formData.message.trim(),
+        from_name: formData.name.trim(),
+        from_email: formData.email.trim(),
+        reply_to: formData.email.trim(),
+    });
+
+    const resolveSubmitError = (error) => {
+        const detail = String(error?.text ?? error?.message ?? '').trim();
+
+        if (/invalid grant|gmail_api|reconnect your gmail/i.test(detail)) {
+            return 'The contact form email service is temporarily unavailable. Please use the direct email link below.';
+        }
+
+        if (/public key is required|service id is required|template id is required/i.test(detail)) {
+            return 'The contact form is not fully configured yet. Please use the direct email link below.';
+        }
+
+        if (detail) {
+            return 'There was an error sending your message. Please try again later or use the direct email link below.';
+        }
+
+        return 'There was an error sending your message. Please try again later.';
+    };
+
     const handleSubmit = async () => {
         submitError.value = '';
         submitSuccess.value = false;
 
-        if (!validate()) return
+        if (!validate()) return;
 
-        isSending.value = true
+        isSending.value = true;
         try {
-            const { serviceID, templateID, userID } = contactDetails.value.emailCredentials
-            await emailjs.send(serviceID, templateID, { ...formData }, userID)
+            const { serviceID, templateID, publicKey } = resolveEmailCredentials();
+            emailjs.init({ publicKey });
 
-            Object.keys(formData).forEach(key => formData[key] = '')
+            await emailjs.send(
+                serviceID,
+                templateID,
+                buildTemplateParams(),
+                { publicKey },
+            );
+
+            Object.keys(formData).forEach((key) => {
+                formData[key] = '';
+            });
             selectedIntent.value = null;
             submitSuccess.value = true;
 
@@ -332,11 +412,14 @@
                 submitSuccess.value = false;
             }, 4000);
         } catch (error) {
-            submitError.value = 'There was an error sending your message. Please try again later.';
+            if (import.meta.env.DEV) {
+                console.error('Contact form submission failed:', error);
+            }
+            submitError.value = resolveSubmitError(error);
         } finally {
-            isSending.value = false
+            isSending.value = false;
         }
-    }
+    };
 </script>
 
 <style scoped>
